@@ -452,6 +452,7 @@ class RayPPOTrainer(object):
             no_think_rl=self.config.algorithm.no_think_rl,
             search_url = self.config.retriever.url,
             topk = self.config.retriever.topk,
+            search_timeout = self.config.retriever.get('timeout', 30.),
         )
 
         # Agent config preparation
@@ -683,6 +684,7 @@ class RayPPOTrainer(object):
             no_think_rl=self.config.algorithm.no_think_rl,
             search_url = self.config.retriever.url,
             topk = self.config.retriever.topk,
+            search_timeout = self.config.retriever.get('timeout', 30.),
         )
 
         generation_manager = LLMGenerationManager(
@@ -785,7 +787,9 @@ class RayPPOTrainer(object):
                             batch = batch.union(reward_tensor)
 
                         # we combine with rule-based rm
+                        batch.meta_info['global_step'] = self.global_steps
                         reward_tensor = self.reward_fn(batch)
+                        metrics.update(getattr(self.reward_fn, 'last_metrics', {}))
                         batch.batch['token_level_scores'] = reward_tensor
 
                         # compute rewards. apply_kl_penalty if available

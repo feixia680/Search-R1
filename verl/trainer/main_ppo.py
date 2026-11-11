@@ -21,6 +21,9 @@ from verl.utils.reward_score import qa_em
 from verl.trainer.ppo.ray_trainer import RayPPOTrainer
 import re
 import numpy as np
+import json
+from pathlib import Path
+from search_r1.llm_agent.trajectory import reward_components
 
 def _select_rm_score_fn(data_source):
     if data_source in ['nq', 'triviaqa', 'popqa', 'hotpotqa', '2wikimultihopqa', 'musique', 'bamboogle']:
@@ -33,10 +36,15 @@ class RewardManager():
     """The reward manager.
     """
 
-    def __init__(self, tokenizer, num_examine, format_score=0.) -> None:
+    def __init__(self, tokenizer, num_examine, format_score=0., beta=0., gamma=0., trace_dir=None, split="train") -> None:
         self.tokenizer = tokenizer
         self.num_examine = num_examine  # the number of batches of decoded responses to print to the console
         self.format_score = format_score
+        reward_components(0., {}, beta, gamma)  # Validate coefficients at startup.
+        self.beta, self.gamma = beta, gamma
+        self.trace_dir, self.split = trace_dir, split
+        self.last_metrics = {}
+        self.call_index = 0
 
     def __call__(self, data: DataProto):
         """We will expand this function gradually based on the available datasets"""
@@ -50,6 +58,8 @@ class RewardManager():
         # all_scores = []
 
         already_print_data_sources = {}
+        rows = []
+        self.last_metrics = {}
 
         for i in range(len(data)):
             data_item = data[i]  # DataProtoItem
@@ -77,7 +87,24 @@ class RewardManager():
 
             score = compute_score_fn(solution_str=sequences_str, ground_truth=ground_truth, format_score=self.format_score)
 
-            reward_tensor[i, valid_response_length - 1] = score
+            trace = data_item.non_tensor_batch.get('trajectory')
+            components = reward_components(score, trace, self.beta, self.gamma)
+            if valid_response_length <= 0:
+                raise ValueError('Cannot assign outcome reward to an empty response')
+            reward_tensor[i, valid_response_length - 1] = components['total_reward']
+            record = dict(trace or {})
+            # Preserve the original Search-R1 scorer, including its prompt format,
+            # so zero coefficients reproduce baseline rewards exactly.
+            record.update(components)
+            record['sample_id'] = str(data_item.non_tensor_batch.get('index', i))
+            record['split'] = self.split
+            record['global_step'] = data.meta_info.get('global_step')
+            record['reward_call'] = self.call_index
+            record['ground_truth'] = ground_truth['target']
+            record['response_tokens'] = int(valid_response_length)
+            record['final_answer_em'] = (qa_em.em_check(record['final_answer'], ground_truth['target'])
+                                         if record.get('final_answer') is not None else 0)
+            rows.append(record)
             # all_scores.append(score)
 
             if data_source not in already_print_data_sources:
@@ -94,6 +121,18 @@ class RewardManager():
         # print(f"[DEBUG] all_scores min: {np.min(all_scores)}")
         # print(f"[DEBUG] all_scores std: {np.std(all_scores)}")
 
+        fields = ['em', 'search_cost', 'repetition_cost', 'total_reward',
+                  'search_actions', 'retrieval_attempts', 'retrieval_successes',
+                  'retrieval_failures', 'duplicate_queries', 'final_answer_em']
+        self.last_metrics = {f'algorithm_a/{key}': float(np.mean([r.get(key, 0) for r in rows]))
+                             for key in fields} if rows else {}
+        if self.trace_dir and rows:
+            directory = Path(self.trace_dir)
+            directory.mkdir(parents=True, exist_ok=True)
+            with (directory / f'{self.split}.jsonl').open('a', encoding='utf-8') as stream:
+                for record in rows:
+                    stream.write(json.dumps(record, ensure_ascii=False, default=lambda value: value.tolist()) + '\n')
+        self.call_index += 1
         return reward_tensor
 
 
@@ -180,10 +219,16 @@ def main_task(config):
         role_worker_mapping[Role.RewardModel] = ray.remote(RewardModelWorker)
         mapping[Role.RewardModel] = global_pool_id
 
-    reward_fn = RewardManager(tokenizer=tokenizer, num_examine=0)
+    search_reward = config.get('search_reward', {})
+    reward_fn = RewardManager(tokenizer=tokenizer, num_examine=0,
+                             beta=search_reward.get('beta', 0.),
+                             gamma=search_reward.get('gamma', 0.),
+                             trace_dir=search_reward.get('trace_dir'), split='train')
 
     # Note that we always use function-based RM for validation
-    val_reward_fn = RewardManager(tokenizer=tokenizer, num_examine=1)
+    # Validation remains pure EM, independent of training penalties.
+    val_reward_fn = RewardManager(tokenizer=tokenizer, num_examine=1,
+                                 trace_dir=search_reward.get('trace_dir'), split='validation')
 
     resource_pool_manager = ResourcePoolManager(resource_pool_spec=resource_pool_spec, mapping=mapping)
     trainer = RayPPOTrainer(config=config,

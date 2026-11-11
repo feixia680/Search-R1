@@ -426,7 +426,11 @@ def get_constant_schedule_with_warmup(
 ):
 
     def lr_lambda(current_step):
-        return min(1, float(current_step) / float(max(1, num_warmup_steps)))
+        # LambdaLR evaluates step 0 at construction. With no warmup, the
+        # very first optimizer update must already use the configured LR.
+        if num_warmup_steps <= 0:
+            return 1.0
+        return min(1, float(current_step) / float(num_warmup_steps))
 
     return LambdaLR(optimizer, lr_lambda, last_epoch)
 
