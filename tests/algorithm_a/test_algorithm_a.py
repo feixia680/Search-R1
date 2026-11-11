@@ -10,7 +10,7 @@ import requests
 import torch
 from transformers import AutoTokenizer
 
-from search_r1.llm_agent.generation import LLMGenerationManager
+from search_r1.llm_agent.generation import LLMGenerationManager, GenerationConfig
 from search_r1.llm_agent.trajectory import new_trajectory, record_action, reward_components
 from verl import DataProto
 from verl.trainer.main_ppo import RewardManager
@@ -56,6 +56,20 @@ class AccountingTests(unittest.TestCase):
             manager.execute_predictions(['<search>Paris</search>'], '', [True])
             self.assertEqual(post.call_args.kwargs['timeout'], .01)
         self.assertEqual(manager._trajectories[0]['retrieval_failures'], 1)
+
+    def test_validation_flags_survive_gpu_padding(self):
+        manager = self.manager(1)
+        manager.config.num_gpus = 2
+        class Worker:
+            def generate_sequences(self, batch):
+                assert batch.meta_info['do_sample'] is False
+                assert batch.meta_info['validate'] is True
+                return DataProto.from_dict({'responses': torch.ones(len(batch), 2, dtype=torch.long)})
+        manager.actor_rollout_wg = Worker()
+        batch = DataProto.from_dict({'input_ids': torch.ones(1, 2, dtype=torch.long)},
+                                   meta_info={'do_sample': False, 'validate': True})
+        result = manager._generate_with_gpu_padding(batch)
+        self.assertEqual(len(result), 1)
 
     def test_zero_warmup_updates_the_first_step(self):
         from verl.utils.torch_functional import get_constant_schedule_with_warmup
@@ -150,6 +164,32 @@ class RewardIntegrationTests(unittest.TestCase):
         self.assertTrue(torch.isfinite(parameter.grad).all())
         optimizer.step()
         self.assertGreater(float(parameter.abs().sum()), 0)
+
+    def test_validation_flags_survive_all_search_turns(self):
+        tok = self.tokenizer
+        class Worker:
+            calls = 0
+            def generate_sequences(worker, batch):
+                self.assertIs(batch.meta_info['do_sample'], False)
+                self.assertIs(batch.meta_info['validate'], True)
+                text = '<search>Paris</search>' if worker.calls == 0 else '<answer>Paris</answer>'
+                worker.calls += 1
+                return DataProto.from_dict({'responses': tok([text], return_tensors='pt',
+                                        add_special_tokens=False).input_ids})
+        worker = Worker()
+        manager = LLMGenerationManager(tok, worker, GenerationConfig(
+            max_turns=1, max_start_length=512, max_prompt_length=1024,
+            max_response_length=128, max_obs_length=64, num_gpus=1))
+        encoded = tok(['Question: capital of France?'], return_tensors='pt', add_special_tokens=False)
+        batch = DataProto.from_dict(dict(input_ids=encoded.input_ids,
+            attention_mask=encoded.attention_mask,
+            position_ids=torch.arange(encoded.input_ids.shape[1]).unsqueeze(0)),
+            meta_info={'do_sample':False, 'validate':True})
+        with patch.object(manager, '_batch_search', return_value={'result':[[]]}):
+            output = manager.run_llm_loop(batch, encoded.input_ids)
+        self.assertEqual(worker.calls, 2)
+        self.assertEqual(output.non_tensor_batch['trajectory'][0]['retrieval_attempts'], 1)
+        self.assertEqual(output.non_tensor_batch['trajectory'][0]['final_answer'], 'Paris')
 
     def test_real_sample_labels_scoring_only(self):
         # Ground-truth answers are used to construct fixtures, NOT model evaluation.

@@ -198,7 +198,7 @@ class LLMGenerationManager:
             pad_sequence = v[0:1].repeat(padding_size, *[1] * (len(v.shape) - 1))
             padded_batch[k] = torch.cat([v, pad_sequence], dim=0)
 
-        padded_active_batch = DataProto.from_dict(padded_batch)
+        padded_active_batch = DataProto.from_dict(padded_batch, meta_info=active_batch.meta_info.copy())
         for key in padded_active_batch.batch.keys():
             padded_active_batch.batch[key] = padded_active_batch.batch[key].long()
 
@@ -206,19 +206,19 @@ class LLMGenerationManager:
         padded_output = self.actor_rollout_wg.generate_sequences(padded_active_batch)
 
         # Remove padding from output
-        trimmed_batch = {k: v[:-padding_size] for k, v in padded_output.batch.items()}
         
         # Handle meta_info if present
         if hasattr(padded_output, 'meta_info') and padded_output.meta_info:
             trimmed_meta = {}
             for k, v in padded_output.meta_info.items():
-                if isinstance(v, torch.Tensor):
+                if isinstance(v, torch.Tensor) and v.ndim > 0 and v.shape[0] == batch_size + padding_size:
                     trimmed_meta[k] = v[:-padding_size]
                 else:
                     trimmed_meta[k] = v
             padded_output.meta_info = trimmed_meta
             
-        padded_output.batch = trimmed_batch
+        padded_output.batch = padded_output.batch[:-padding_size]
+        padded_output.non_tensor_batch = {k: v[:-padding_size] for k, v in padded_output.non_tensor_batch.items()}
         return padded_output
 
     def run_llm_loop(self, gen_batch, initial_input_ids: torch.Tensor) -> Tuple[Dict, Dict]:
@@ -248,6 +248,7 @@ class LLMGenerationManager:
             rollings_active = DataProto.from_dict({
                 k: v[active_mask] for k, v in rollings.batch.items()
             })            
+            rollings_active.meta_info.update(rollings.meta_info)
             gen_output = self._generate_with_gpu_padding(rollings_active)
 
             meta_info = gen_output.meta_info            
@@ -291,6 +292,7 @@ class LLMGenerationManager:
             rollings_active = DataProto.from_dict({
                 k: v[active_mask] for k, v in rollings.batch.items()
             })            
+            rollings_active.meta_info.update(rollings.meta_info)
             gen_output = self._generate_with_gpu_padding(rollings_active)
 
             meta_info = gen_output.meta_info            

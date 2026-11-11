@@ -159,6 +159,8 @@ def main_task(config):
     from omegaconf import OmegaConf
     pprint(OmegaConf.to_container(config, resolve=True))  # resolve=True will eval symbol values
     OmegaConf.resolve(config)
+    from transformers import set_seed
+    set_seed(config.trainer.get('seed', 42))
 
     # env_class = ENV_CLASS_MAPPING[config.env.name]
 
