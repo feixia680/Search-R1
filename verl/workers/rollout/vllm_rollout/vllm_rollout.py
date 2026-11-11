@@ -38,6 +38,7 @@ from verl.workers.rollout.base import BaseRollout
 from verl.third_party.vllm import LLM, vllm_version
 from verl.third_party.vllm import parallel_state as vllm_ps
 from vllm import SamplingParams
+from verl.utils.debug.performance import _memory_probe
 
 # TODO
 # 1. support pp in vllm
@@ -142,7 +143,9 @@ class vLLMRollout(BaseRollout):
     def generate_sequences(self, prompts: DataProto, **kwargs) -> DataProto:
         # rebuild vllm cache engine
         if self.config.free_cache_engine:
+            _memory_probe('DIAG before KV cache init')
             self.inference_engine.init_cache_engine()
+            _memory_probe('DIAG after KV cache init')
 
         idx = prompts.batch['input_ids']  # (bs, prompt_length)
         # left-padded attention_mask
@@ -172,11 +175,13 @@ class vLLMRollout(BaseRollout):
 
         # users can customize different sampling_params at different run
         with self.update_sampling_params(**kwargs):
+            _memory_probe('DIAG before engine.generate')
             output = self.inference_engine.generate(
                 prompts=None,  # because we have already convert it to prompt token id
                 sampling_params=self.sampling_params,
                 prompt_token_ids=idx_list,
                 use_tqdm=False)
+            _memory_probe('DIAG after engine.generate')
 
         # TODO(sgm): disable logprob when recompute_log_prob is enable
         # if n = 1: (bs, response_length) ; if n > 1: (bs * n, response_length)
@@ -221,6 +226,8 @@ class vLLMRollout(BaseRollout):
 
         # free vllm cache engine
         if self.config.free_cache_engine:
+            _memory_probe('DIAG before KV cache free')
             self.inference_engine.free_cache_engine()
+            _memory_probe('DIAG after KV cache free')
 
         return DataProto(batch=batch)
