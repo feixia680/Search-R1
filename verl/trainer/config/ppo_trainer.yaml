@@ -146,6 +146,7 @@ reward_model:
   retrieval_score: 0
 
 retriever:
+  timeout: 30.0
   url: "http://127.0.0.1:8000/retrieve"
   topk: 3
 
@@ -178,3 +179,13 @@ trainer:
 
 max_turns: 10
 do_search: true
+
+# Algorithm A: outcome reward; validation always uses pure EM.
+search_reward:
+  alpha: 0.0
+  delta: 0.0
+  require_final_answer: false
+  invalid_evidence_policy: error
+  beta: 0.0
+  gamma: 0.0
+  trace_dir: null

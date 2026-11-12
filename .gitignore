@@ -121,5 +121,6 @@ log/
 
 **logs
 /models/
-
 /verl_checkpoints/
+# Isolated Algorithm A artifacts
+algorithm_a_runs/

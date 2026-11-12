@@ -9,6 +9,10 @@ from verl import DataProto
 from verl.utils.tracking import Tracking
 import shutil
 import requests
+import numpy as np
+import time
+from .trajectory import new_trajectory, record_action
+from .visibility import VisibilityTracker
 
 @dataclass
 class GenerationConfig:
@@ -21,6 +25,8 @@ class GenerationConfig:
     no_think_rl: bool=False
     search_url: str = None
     topk: int = 3
+    search_timeout: float = 30.0
+    record_evidence: bool = True
 
 class LLMGenerationManager:
     def __init__(
@@ -77,12 +83,17 @@ class LLMGenerationManager:
     def _process_next_obs(self, next_obs: List[str]) -> torch.Tensor:
         """Process next observations from environment."""
         
-        next_obs_ids = self.tokenizer(
+        encoded = self.tokenizer(
             next_obs, 
             padding='longest',
             return_tensors='pt',
             add_special_tokens=False,  # Prevents adding special tokens
-        )['input_ids']
+            return_offsets_mapping=bool(getattr(self, '_visibility', None)),
+        )
+        next_obs_ids = encoded['input_ids']
+        if getattr(self, '_visibility', None):
+            self._visibility.observations(next_obs, next_obs_ids, encoded['offset_mapping'],
+                                          self.config.max_obs_length)
 
         if next_obs_ids.shape[1] > self.config.max_obs_length:
             print(f"[WARNING] OBSERVATION TOO LONG, CONSIDER CHANGING YOUR CONFIG, {next_obs_ids.shape[1]} & {self.config.max_obs_length}")            
@@ -113,6 +124,9 @@ class LLMGenerationManager:
             'position_ids': new_position_ids[:, -max_len:],
             'attention_mask': new_attention_mask[:, -max_len:]
         })
+        if getattr(self, '_visibility', None):
+            self._visibility.merge(rollings.batch['input_ids'], cur_responses, next_obs_ids,
+                                   new_rollings.batch['input_ids'].shape[1])
         new_rollings.meta_info.update(rollings.meta_info)
         
         return new_rollings
@@ -194,7 +208,7 @@ class LLMGenerationManager:
             pad_sequence = v[0:1].repeat(padding_size, *[1] * (len(v.shape) - 1))
             padded_batch[k] = torch.cat([v, pad_sequence], dim=0)
 
-        padded_active_batch = DataProto.from_dict(padded_batch)
+        padded_active_batch = DataProto.from_dict(padded_batch, meta_info=active_batch.meta_info.copy())
         for key in padded_active_batch.batch.keys():
             padded_active_batch.batch[key] = padded_active_batch.batch[key].long()
 
@@ -202,24 +216,27 @@ class LLMGenerationManager:
         padded_output = self.actor_rollout_wg.generate_sequences(padded_active_batch)
 
         # Remove padding from output
-        trimmed_batch = {k: v[:-padding_size] for k, v in padded_output.batch.items()}
         
         # Handle meta_info if present
         if hasattr(padded_output, 'meta_info') and padded_output.meta_info:
             trimmed_meta = {}
             for k, v in padded_output.meta_info.items():
-                if isinstance(v, torch.Tensor):
+                if isinstance(v, torch.Tensor) and v.ndim > 0 and v.shape[0] == batch_size + padding_size:
                     trimmed_meta[k] = v[:-padding_size]
                 else:
                     trimmed_meta[k] = v
             padded_output.meta_info = trimmed_meta
             
-        padded_output.batch = trimmed_batch
+        padded_output.batch = padded_output.batch[:-padding_size]
+        padded_output.non_tensor_batch = {k: v[:-padding_size] for k, v in padded_output.non_tensor_batch.items()}
         return padded_output
 
     def run_llm_loop(self, gen_batch, initial_input_ids: torch.Tensor) -> Tuple[Dict, Dict]:
         """Run main LLM generation loop."""
         
+        self._trajectories = [new_trajectory() for _ in range(len(initial_input_ids))]
+        self._visibility = (VisibilityTracker(self.tokenizer, gen_batch.batch['input_ids'], self._trajectories)
+                            if self.config.record_evidence else None)
         original_left_side = {'input_ids': initial_input_ids[:, -self.config.max_start_length:]}
         original_right_side = {'responses': initial_input_ids[:, []], 'responses_with_info_mask': initial_input_ids[:, []]}
         
@@ -243,6 +260,9 @@ class LLMGenerationManager:
             rollings_active = DataProto.from_dict({
                 k: v[active_mask] for k, v in rollings.batch.items()
             })            
+            if self._visibility:
+                self._visibility.capture(rollings.batch['input_ids'], active_mask)
+            rollings_active.meta_info.update(rollings.meta_info)
             gen_output = self._generate_with_gpu_padding(rollings_active)
 
             meta_info = gen_output.meta_info            
@@ -286,6 +306,9 @@ class LLMGenerationManager:
             rollings_active = DataProto.from_dict({
                 k: v[active_mask] for k, v in rollings.batch.items()
             })            
+            if self._visibility:
+                self._visibility.capture(rollings.batch['input_ids'], active_mask)
+            rollings_active.meta_info.update(rollings.meta_info)
             gen_output = self._generate_with_gpu_padding(rollings_active)
 
             meta_info = gen_output.meta_info            
@@ -316,7 +339,12 @@ class LLMGenerationManager:
         
         print("ACTIVE_TRAJ_NUM:", active_num_list)
         
-        return self._compose_final_output(original_left_side, original_right_side, meta_info)
+        output = self._compose_final_output(original_left_side, original_right_side, meta_info)
+        for trace in self._trajectories:
+            if trace['termination_reason'] is None:
+                trace['termination_reason'] = 'turn_limit'
+        output.non_tensor_batch['trajectory'] = np.array(self._trajectories, dtype=object)
+        return output
 
     def _compose_final_output(self, left_side: Dict,
                             right_side: Dict,
@@ -365,43 +393,38 @@ class LLMGenerationManager:
             List of observation strings
         """
         cur_actions, contents = self.postprocess_predictions(predictions)
+        if active_mask is None:
+            active_mask = [True] * len(predictions)
         next_obs, dones, valid_action, is_search = [], [], [], []
-        
-        search_queries = [content for action, content in zip(cur_actions, contents) if action == 'search']
-        if do_search:
-            search_results = self.batch_search(search_queries)
-            assert len(search_results) == sum([1 for action in cur_actions if action == 'search'])
-        else:
-            search_results = [''] * sum([1 for action in cur_actions if action == 'search'])
+        indices = [i for i, (a, active) in enumerate(zip(cur_actions, active_mask))
+                   if active and a == 'search']
+        outcomes, results = {}, {}
+        if do_search and indices:
+            search_results = self.batch_search([contents[i] for i in indices])
+            results = dict(zip(indices, search_results))
+            outcomes = dict(zip(indices, self._last_search_outcomes))
 
         for i, (action, active) in enumerate(zip(cur_actions, active_mask)):
-            
             if not active:
-                next_obs.append('')
-                dones.append(1)
-                valid_action.append(0)
-                is_search.append(0)
+                next_obs.append(''); dones.append(1)
+                valid_action.append(0); is_search.append(0)
+                continue
+            if hasattr(self, '_trajectories'):
+                record_action(self._trajectories[i], action, contents[i], predictions[i],
+                              outcomes.get(i), do_search=do_search)
+            if action == 'answer':
+                obs, done, valid, searched = '', 1, 1, 0
+            elif action == 'search':
+                obs = f"\n\n<information>{results.get(i, '').strip()}</information>\n\n"
+                done, valid, searched = 0, 1, 1
             else:
-                if action == 'answer':
-                    next_obs.append('')
-                    dones.append(1)
-                    valid_action.append(1)
-                    is_search.append(0)
-                elif action == 'search':
-                    next_obs.append(f'\n\n<information>{search_results.pop(0).strip()}</information>\n\n')
-                    dones.append(0)
-                    valid_action.append(1)
-                    is_search.append(1)
-                else:
-                    next_obs.append(f'\nMy previous action is invalid. \
-If I want to search, I should put the query between <search> and </search>. \
-If I want to give the final answer, I should put the answer between <answer> and </answer>. Let me try again.\n')
-                    dones.append(0)
-                    valid_action.append(0)
-                    is_search.append(0)
-            
-        assert len(search_results) == 0
-            
+                obs = ('\nMy previous action is invalid. '
+                       'If I want to search, I should put the query between <search> and </search>. '
+                       'If I want to give the final answer, I should put the answer between '
+                       '<answer> and </answer>. Let me try again.\n')
+                done, valid, searched = 0, 0, 0
+            next_obs.append(obs); dones.append(done)
+            valid_action.append(valid); is_search.append(searched)
         return next_obs, dones, valid_action, is_search
 
     def postprocess_predictions(self, predictions: List[Any]) -> Tuple[List[int], List[bool]]:
@@ -443,9 +466,37 @@ If I want to give the final answer, I should put the answer between <answer> and
         Returns:
             search results which is concatenated into a string
         """
-        results = self._batch_search(queries)['result']
-        
-        return [self._passages2string(result) for result in results]
+        queries = queries or []
+        self._last_search_outcomes = []
+        if not queries:
+            return []
+        started = time.perf_counter()
+        try:
+            results = self._batch_search(queries)['result']
+            if not isinstance(results, list) or len(results) != len(queries):
+                raise ValueError('Retriever response count does not match query count')
+        except (requests.RequestException, ValueError, KeyError, TypeError) as exc:
+            elapsed = time.perf_counter() - started
+            self._last_search_outcomes = [dict(success=False, error=str(exc),
+                seconds=elapsed, document_ids=[]) for _ in queries]
+            return ['Retrieval failed; try a different query or answer with available evidence.'] * len(queries)
+        observations = []
+        for result in results:
+            try:
+                observation = self._passages2string(result)
+                documents = []
+                for entry in result:
+                    title, _, body = entry['document']['contents'].partition('\n')
+                    documents.append(dict(document_id=entry['document'].get('id'), title=title, body=body))
+                outcome = dict(success=True, error=None, documents=documents,
+                    document_ids=[d['document'].get('id') for d in result])
+            except (ValueError, KeyError, TypeError, AttributeError) as exc:
+                observation = 'Retrieval failed: malformed documents.'
+                outcome = dict(success=False, error=str(exc), document_ids=[])
+            outcome['seconds'] = time.perf_counter() - started
+            self._last_search_outcomes.append(outcome)
+            observations.append(observation)
+        return observations
 
     def _batch_search(self, queries):
         
@@ -455,7 +506,9 @@ If I want to give the final answer, I should put the answer between <answer> and
             "return_scores": True
         }
         
-        return requests.post(self.config.search_url, json=payload).json()
+        response = requests.post(self.config.search_url, json=payload, timeout=self.config.search_timeout)
+        response.raise_for_status()
+        return response.json()
 
     def _passages2string(self, retrieval_result):
         format_reference = ''
