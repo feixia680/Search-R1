@@ -36,7 +36,8 @@ Per-step metrics use the `algorithm_a/` prefix. Trace writing is opt-in via
 
 This is an **outcome / trajectory-level reward**, assigned at the last response
 position and consumed by the existing GRPO advantage calculation. It does not
-implement per-action credit assignment or evidence-gain reward.
+implement per-action credit assignment. The evidence-gain extension and its CPU
+verification are described in `ALGORITHM_A_EVIDENCE.md`.
 
 ## CPU checks in the server environment
 
@@ -102,8 +103,8 @@ Start all primary comparisons from the same base checkpoint and use the same
 training data, rollout budget, search limits and held-out evaluator:
 EM only; EM + search cost; EM + search cost + repetition penalty.
 Use validation to tune coefficients, then report EM/F1, calls and repetition on
-the untouched test split. Evidence-gain reward requires supporting-fact metadata
-which is absent from the current processed parquet; it remains future work.
+the untouched test split. Evidence-gain metadata can now be prepared separately without overwriting the
+original processed parquet; see `ALGORITHM_A_EVIDENCE.md`.
 
 ## Reward interpretation limitation
 
@@ -117,3 +118,40 @@ The inherited `train_grpo_*` / `run_grpo_*` launchers still refer to the origina
 baseline directory. Use the new `run_algorithm_a_smoke.sh` for this branch;
 formal algorithm-A training launchers should be configured separately.
 See `ALGORITHM_A_RESULTS.md` for the executed checks and observed limitations.
+
+## Paired 10-update exploratory smoke
+
+```bash
+bash run_algorithm_a_medium_smoke.sh
+```
+
+This separate launcher freezes 40 training and 32 validation questions, checks
+question-text overlap, stores parquet files and SHA256/sample-ID manifests, then
+runs initial greedy validation, ten optimizer updates and final greedy validation.
+It starts from the original Qwen2.5-3B base model. Settings: train batch 4,
+2 rollouts/question, actor mini-batch 8, micro-batch 1, lr 1e-6, zero warmup,
+response 256 tokens, observation 1024 tokens, 2 search rounds, beta .02/gamma .05.
+There is one optimizer step per training batch. `total_training_steps=11` accounts
+for the inherited counter behavior; the launcher executes steps 1 through 10.
+A final actor checkpoint is saved at step 10.
+
+The branch now preserves `do_sample=False`/`validate=True` metadata through
+active-trajectory filtering and GPU padding, and retains TensorDict when removing
+GPU padding. Two new regression checks exercise multi-round and padded validation;
+10 checks passed before this larger run was launched. The trainer seeds its driver
+with `trainer.seed` (default 42), and validation trace rows include global step:
+0 for the initial evaluation, 11 after the ten-update run.
+
+`evaluation/compare_algorithm_a_em.py --run-dir RUN_DIRECTORY` verifies identical
+32 question IDs, 80 training trajectories across 10 updates and pure-EM validation,
+then writes `em_comparison.json` and `paired_answers.jsonl`. Results include raw
+correct counts, EM percentage-point change, wrong-to-right/right-to-wrong counts,
+search calls, missing answers and discrepancies with final-answer EM. One question
+is 3.125 percentage points on this small set. This is an exploratory before/after
+comparison; attributing a gain to the new reward requires a matched EM-only control.
+
+## Evidence data and reward extension
+
+See `ALGORITHM_A_EVIDENCE.md` for supporting-fact mapping, model-visible token
+provenance, evidence gain, optional invalid/final-answer safeguards and CPU replay
+verification. No formal evidence-reward training results are claimed.

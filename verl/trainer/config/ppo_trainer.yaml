@@ -182,6 +182,10 @@ do_search: true
 
 # Algorithm A: outcome reward; validation always uses pure EM.
 search_reward:
+  alpha: 0.0
+  delta: 0.0
+  require_final_answer: false
+  invalid_evidence_policy: error
   beta: 0.0
   gamma: 0.0
   trace_dir: null

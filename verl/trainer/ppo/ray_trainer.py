@@ -491,6 +491,7 @@ class RayPPOTrainer(object):
 
                 # evaluate using reward_function
                 # for certain reward function (e.g. sandbox), the generation can overlap with reward
+                test_batch.meta_info['global_step'] = self.global_steps
                 reward_tensor = self.val_reward_fn(test_batch)
 
                 reward_tensor_lst.append(reward_tensor)
@@ -525,6 +526,7 @@ class RayPPOTrainer(object):
                     
                     # evaluate using reward_function
                     # for certain reward function (e.g. sandbox), the generation can overlap with reward
+                    test_batch.meta_info['global_step'] = self.global_steps
                     reward_tensor = self.val_reward_fn(test_batch)
 
                     reward_tensor_lst.append(reward_tensor)

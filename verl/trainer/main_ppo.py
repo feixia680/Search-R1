@@ -24,6 +24,7 @@ import numpy as np
 import json
 from pathlib import Path
 from search_r1.llm_agent.trajectory import reward_components
+from search_r1.llm_agent.evidence import score_evidence
 
 def _select_rm_score_fn(data_source):
     if data_source in ['nq', 'triviaqa', 'popqa', 'hotpotqa', '2wikimultihopqa', 'musique', 'bamboogle']:
@@ -36,12 +37,18 @@ class RewardManager():
     """The reward manager.
     """
 
-    def __init__(self, tokenizer, num_examine, format_score=0., beta=0., gamma=0., trace_dir=None, split="train") -> None:
+    def __init__(self, tokenizer, num_examine, format_score=0., beta=0., gamma=0., trace_dir=None, split="train", alpha=0., delta=0.,
+                 require_final_answer=False, max_search_calls=None, invalid_evidence_policy="error") -> None:
         self.tokenizer = tokenizer
         self.num_examine = num_examine  # the number of batches of decoded responses to print to the console
         self.format_score = format_score
-        reward_components(0., {}, beta, gamma)  # Validate coefficients at startup.
+        reward_components(0., {}, beta, gamma, alpha=alpha, delta=delta)  # Validate coefficients at startup.
         self.beta, self.gamma = beta, gamma
+        self.alpha, self.delta = alpha, delta
+        if invalid_evidence_policy not in ('error', 'skip'):
+            raise ValueError('invalid_evidence_policy must be error or skip')
+        self.invalid_evidence_policy = invalid_evidence_policy
+        self.require_final_answer, self.max_search_calls = require_final_answer, max_search_calls
         self.trace_dir, self.split = trace_dir, split
         self.last_metrics = {}
         self.call_index = 0
@@ -88,13 +95,26 @@ class RewardManager():
             score = compute_score_fn(solution_str=sequences_str, ground_truth=ground_truth, format_score=self.format_score)
 
             trace = data_item.non_tensor_batch.get('trajectory')
-            components = reward_components(score, trace, self.beta, self.gamma)
+            reference = data_item.non_tensor_batch.get('extra_info', {}).get('evidence')
+            evidence = {}
+            if (self.alpha and reference and reference.get('status') == 'invalid_annotation'
+                    and self.invalid_evidence_policy == 'skip'):
+                evidence = dict(evidence_eligible=False, evidence_status='invalid_annotation',
+                                evidence_reference_id=reference.get('raw_id'))
+            elif self.alpha or (reference and reference.get('status') == 'valid'
+                                and trace and trace.get('visibility_schema_version') == 1):
+                evidence = score_evidence(reference, trace)
+                evidence['evidence_reference_id'] = reference['raw_id']
+            components = reward_components(score, trace, self.beta, self.gamma,
+                alpha=self.alpha, delta=self.delta, evidence_gain=evidence.get('evidence_gain', 0.),
+                require_final_answer=self.require_final_answer, max_search_calls=self.max_search_calls)
             if valid_response_length <= 0:
                 raise ValueError('Cannot assign outcome reward to an empty response')
             reward_tensor[i, valid_response_length - 1] = components['total_reward']
             record = dict(trace or {})
             # Preserve the original Search-R1 scorer, including its prompt format,
             # so zero coefficients reproduce baseline rewards exactly.
+            record.update(evidence)
             record.update(components)
             record['sample_id'] = str(data_item.non_tensor_batch.get('index', i))
             record['split'] = self.split
@@ -123,9 +143,14 @@ class RewardManager():
 
         fields = ['em', 'search_cost', 'repetition_cost', 'total_reward',
                   'search_actions', 'retrieval_attempts', 'retrieval_successes',
-                  'retrieval_failures', 'duplicate_queries', 'final_answer_em']
+                  'retrieval_failures', 'duplicate_queries', 'final_answer_em',
+                  'invalid_actions', 'evidence_eligible', 'evidence_coverage', 'evidence_hit_count',
+                  'evidence_reward', 'invalid_cost', 'failure_guard_cost']
         self.last_metrics = {f'algorithm_a/{key}': float(np.mean([r.get(key, 0) for r in rows]))
                              for key in fields} if rows else {}
+        eligible = [r for r in rows if r.get('evidence_eligible')]
+        if eligible:
+            self.last_metrics['algorithm_a/evidence_coverage'] = float(np.mean([r['evidence_coverage'] for r in eligible]))
         if self.trace_dir and rows:
             directory = Path(self.trace_dir)
             directory.mkdir(parents=True, exist_ok=True)
@@ -159,6 +184,8 @@ def main_task(config):
     from omegaconf import OmegaConf
     pprint(OmegaConf.to_container(config, resolve=True))  # resolve=True will eval symbol values
     OmegaConf.resolve(config)
+    from transformers import set_seed
+    set_seed(config.trainer.get('seed', 42))
 
     # env_class = ENV_CLASS_MAPPING[config.env.name]
 
@@ -223,6 +250,11 @@ def main_task(config):
     reward_fn = RewardManager(tokenizer=tokenizer, num_examine=0,
                              beta=search_reward.get('beta', 0.),
                              gamma=search_reward.get('gamma', 0.),
+                             alpha=search_reward.get('alpha', 0.),
+                             delta=search_reward.get('delta', 0.),
+                             require_final_answer=search_reward.get('require_final_answer', False),
+                             max_search_calls=config.max_turns,
+                             invalid_evidence_policy=search_reward.get('invalid_evidence_policy', 'error'),
                              trace_dir=search_reward.get('trace_dir'), split='train')
 
     # Note that we always use function-based RM for validation
