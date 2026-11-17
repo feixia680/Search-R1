@@ -440,7 +440,11 @@ def create_colocated_worker_cls(class_dict: dict[str, RayClassWithInitArgs]):
     class WorkerDict(worker_cls):
 
         def __init__(self):
-            super().__init__()
+            # The outer colocated wrapper only delegates calls.  It must initialize
+            # the base Worker metadata directly instead of calling a role worker's
+            # constructor, whose required config/role arguments belong to the inner
+            # user-defined workers.
+            Worker.__init__(self)
             self.worker_dict = {}
             for key, user_defined_cls in cls_dict.items():
                 user_defined_cls = _unwrap_ray_remote(user_defined_cls)
