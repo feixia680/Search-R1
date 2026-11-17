@@ -95,3 +95,39 @@ def score_evidence(reference, trajectory):
     return dict(evidence_eligible=True, evidence_gain=len(covered) / len(facts), evidence_coverage=len(covered) / len(facts),
                 evidence_fact_count=len(facts), evidence_hit_count=len(covered),
                 evidence_events=events)
+
+def score_search_state(reference, trajectory):
+    """Count dispatched searches after all gold facts were already visible.
+
+    Use generation timestamps from real policy-input views. Future views of an
+    earlier observation cannot change the state before an earlier action.
+    Reference labels stay in reward metadata.
+    """
+    score_evidence(reference, trajectory)  # Validate the existing data contract.
+    facts = reference['supporting_facts']
+    first_seen = {}
+    searches = [e for e in trajectory['events']
+                if e.get('action') == 'search' and e.get('attempted')]
+    if len(searches) != trajectory.get('retrieval_attempts', 0):
+        raise ValueError('Search events and dispatched-call count disagree')
+    for event in searches:
+        for view in event.get('visible_views', []) if event.get('success') else []:
+            generation = view.get('generation')
+            if (not isinstance(generation, int) or isinstance(generation, bool)
+                    or generation <= event['turn']):
+                raise ValueError('State costs require causal generation timestamps')
+            for chunk in view.get('chunks', []):
+                for body in chunk.get('document_bodies', []):
+                    for fact in facts:
+                        if (title_key(body['title']) == title_key(fact['title'])
+                                and contains_sentence(body['text'], fact['sentence'])
+                                and contains_sentence(chunk['decoded_text'], fact['sentence'])):
+                            key = fact['fact_id']
+                            first_seen[key] = min(first_seen.get(key, generation), generation)
+    states = []
+    for event in searches:
+        visible = sum(g <= event['turn'] for g in first_seen.values())
+        states.append(dict(turn=event['turn'], coverage_before_search=visible / len(facts),
+                           after_full=visible == len(facts)))
+    return dict(after_full_search_calls=sum(s['after_full'] for s in states),
+                search_state_events=states, search_state_eligible=True)

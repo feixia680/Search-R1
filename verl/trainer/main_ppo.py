@@ -24,7 +24,7 @@ import numpy as np
 import json
 from pathlib import Path
 from search_r1.llm_agent.trajectory import reward_components
-from search_r1.llm_agent.evidence import score_evidence
+from search_r1.llm_agent.evidence import score_evidence, score_search_state
 
 def _select_rm_score_fn(data_source):
     if data_source in ['nq', 'triviaqa', 'popqa', 'hotpotqa', '2wikimultihopqa', 'musique', 'bamboogle']:
@@ -38,13 +38,15 @@ class RewardManager():
     """
 
     def __init__(self, tokenizer, num_examine, format_score=0., beta=0., gamma=0., trace_dir=None, split="train", alpha=0., delta=0.,
-                 require_final_answer=False, max_search_calls=None, invalid_evidence_policy="error") -> None:
+                 require_final_answer=False, max_search_calls=None, invalid_evidence_policy="error", after_full_lambda=0.) -> None:
         self.tokenizer = tokenizer
         self.num_examine = num_examine  # the number of batches of decoded responses to print to the console
         self.format_score = format_score
-        reward_components(0., {}, beta, gamma, alpha=alpha, delta=delta)  # Validate coefficients at startup.
+        reward_components(0., {}, beta, gamma, alpha=alpha, delta=delta,
+                          after_full_lambda=after_full_lambda, after_full_search_calls=0)  # Validate coefficients at startup.
         self.beta, self.gamma = beta, gamma
         self.alpha, self.delta = alpha, delta
+        self.after_full_lambda = after_full_lambda
         if invalid_evidence_policy not in ('error', 'skip'):
             raise ValueError('invalid_evidence_policy must be error or skip')
         self.invalid_evidence_policy = invalid_evidence_policy
@@ -97,17 +99,25 @@ class RewardManager():
             trace = data_item.non_tensor_batch.get('trajectory')
             reference = data_item.non_tensor_batch.get('extra_info', {}).get('evidence')
             evidence = {}
-            if (self.alpha and reference and reference.get('status') == 'invalid_annotation'
+            if ((self.alpha or self.after_full_lambda) and reference and reference.get('status') == 'invalid_annotation'
                     and self.invalid_evidence_policy == 'skip'):
                 evidence = dict(evidence_eligible=False, evidence_status='invalid_annotation',
                                 evidence_reference_id=reference.get('raw_id'))
-            elif self.alpha or (reference and reference.get('status') == 'valid'
+            elif self.alpha or self.after_full_lambda or (reference and reference.get('status') == 'valid'
                                 and trace and trace.get('visibility_schema_version') == 1):
                 evidence = score_evidence(reference, trace)
                 evidence['evidence_reference_id'] = reference['raw_id']
+            if self.after_full_lambda:
+                if evidence.get('evidence_eligible'):
+                    evidence.update(score_search_state(reference, trace))
+                else:
+                    evidence.update(after_full_search_calls=0, search_state_eligible=False,
+                                    search_state_events=[])
             components = reward_components(score, trace, self.beta, self.gamma,
                 alpha=self.alpha, delta=self.delta, evidence_gain=evidence.get('evidence_gain', 0.),
-                require_final_answer=self.require_final_answer, max_search_calls=self.max_search_calls)
+                require_final_answer=self.require_final_answer, max_search_calls=self.max_search_calls,
+                after_full_lambda=self.after_full_lambda,
+                after_full_search_calls=evidence.get('after_full_search_calls'))
             if valid_response_length <= 0:
                 raise ValueError('Cannot assign outcome reward to an empty response')
             reward_tensor[i, valid_response_length - 1] = components['total_reward']
@@ -141,7 +151,8 @@ class RewardManager():
         # print(f"[DEBUG] all_scores min: {np.min(all_scores)}")
         # print(f"[DEBUG] all_scores std: {np.std(all_scores)}")
 
-        fields = ['em', 'search_cost', 'repetition_cost', 'total_reward',
+        fields = ['em', 'search_cost', 'repetition_cost', 'after_full_cost',
+                  'after_full_search_calls', 'search_state_eligible', 'total_reward',
                   'search_actions', 'retrieval_attempts', 'retrieval_successes',
                   'retrieval_failures', 'duplicate_queries', 'final_answer_em',
                   'invalid_actions', 'evidence_eligible', 'evidence_coverage', 'evidence_hit_count',
@@ -252,6 +263,7 @@ def main_task(config):
                              gamma=search_reward.get('gamma', 0.),
                              alpha=search_reward.get('alpha', 0.),
                              delta=search_reward.get('delta', 0.),
+                             after_full_lambda=search_reward.get('after_full_lambda', 0.),
                              require_final_answer=search_reward.get('require_final_answer', False),
                              max_search_calls=config.max_turns,
                              invalid_evidence_policy=search_reward.get('invalid_evidence_policy', 'error'),

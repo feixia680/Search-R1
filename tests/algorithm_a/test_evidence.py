@@ -237,5 +237,29 @@ class EvidenceTests(unittest.TestCase):
             with self.assertRaises(ValueError): reward_components(0, wrong, alpha=alpha)
 
 
+    def test_state_cost_through_actual_visibility_and_reward_manager(self):
+        tok = self.tokenizer
+        output = self.rollout([['<search>Paris France</search>'], ['<search>Paris again</search>'],
+                               ['<answer>France</answer>']],
+                              [[[doc(), doc('France','France is in Europe.')]], [[doc()]]])
+        prompt=tok(['Use <answer>example</answer>. Question: Where?'],return_tensors='pt',padding=True)
+        answer=tok(['<answer>France</answer>'],return_tensors='pt',padding=True)
+        batch=DataProto.from_dict(dict(prompts=prompt.input_ids,responses=answer.input_ids,
+            attention_mask=torch.cat([prompt.attention_mask,answer.attention_mask],dim=1)),
+            non_tensors=dict(data_source=['hotpotqa'],index=[0],
+                trajectory=list(output.non_tensor_batch['trajectory']),
+                reward_model=[{'ground_truth':{'target':['France']}}],
+                extra_info=[{'evidence':reference()}]))
+        manager=RewardManager(tok,0,alpha=.1,beta=.005,after_full_lambda=.01,
+                              require_final_answer=True,max_search_calls=2)
+        self.assertAlmostEqual(float(manager(batch).sum()),1.08,places=6)
+        self.assertEqual(manager.last_metrics['algorithm_a/after_full_search_calls'],1)
+        self.assertAlmostEqual(float(RewardManager(tok,1)(batch).sum()),1)
+        batch.non_tensor_batch['extra_info'][0]={'evidence':dict(reference(),status='invalid_annotation')}
+        skipped=RewardManager(tok,0,alpha=.1,beta=.005,after_full_lambda=.01,
+            invalid_evidence_policy='skip',require_final_answer=True,max_search_calls=2)
+        self.assertAlmostEqual(float(skipped(batch).sum()),.99,places=6)
+
+
 if __name__ == '__main__':
     unittest.main()
