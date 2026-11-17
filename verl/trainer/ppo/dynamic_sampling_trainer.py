@@ -177,7 +177,7 @@ class DynamicSamplingTrainer(RayPPOTrainer):
             self.logger.log(metrics, step=step)
             self._append('completed_updates.jsonl', dict(global_step=step, metrics=metrics))
         self.global_steps = int(self.total_training_steps)
-        if self.val_reward_fn is not None:
+        if self.val_reward_fn is not None and not self.config.trainer.get('skip_final_validation', False):
             self.logger.log(self._validate(), step=self.global_steps)
 
     def fit(self):
