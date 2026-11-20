@@ -1,0 +1,25 @@
+{
+  "label": "base",
+  "n": 200,
+  "correct": 21.0,
+  "em": 0.105,
+  "action_correct": 21,
+  "mean_search": 0.715,
+  "missing_final": 63,
+  "seconds": 214.40703332424164,
+  "model": "/g22538014wej/11x22f/Search-R1/models/Qwen2.5-3B",
+  "settings": {
+    "backend": "vllm",
+    "dtype": "bfloat16",
+    "batch_size": 8,
+    "seed": 42,
+    "greedy": true,
+    "max_turns": 2,
+    "max_response_length": 256,
+    "max_start_length": 512,
+    "max_prompt_length": 2816,
+    "max_obs_length": 1024,
+    "topk": 3,
+    "dataset_sample_seed": 42
+  }
+}

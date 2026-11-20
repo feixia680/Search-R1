@@ -1,0 +1,7 @@
+model,budget,n,correct,em,mean_calls,support_complete,mean_coverage,fixed_insufficient_n,fixed_insufficient_correct,fixed_sufficient_n,fixed_sufficient_mean_calls
+evidence,1,200,1,0.005,1.0,2,0.2770833333333336,198,1,2,1.0
+evidence,2,200,22,0.11,1.985,34,0.45999999999999985,198,22,2,1.5
+evidence,4,200,29,0.145,2.275,37,0.47708333333333336,198,29,2,1.5
+dynamic,1,200,16,0.08,1.0,9,0.31750000000000034,198,15,2,1.0
+dynamic,2,200,16,0.08,1.0,9,0.31750000000000034,198,15,2,1.0
+dynamic,4,200,16,0.08,1.0,9,0.31750000000000034,198,15,2,1.0

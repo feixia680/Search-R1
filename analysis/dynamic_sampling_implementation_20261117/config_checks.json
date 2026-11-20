@@ -1,0 +1,30 @@
+[
+  {
+    "gpus": 1,
+    "enabled": true,
+    "status": "PASS",
+    "max_batches": 3,
+    "alpha": 0.1
+  },
+  {
+    "gpus": 1,
+    "enabled": false,
+    "status": "PASS",
+    "max_batches": 3,
+    "alpha": 0.1
+  },
+  {
+    "gpus": 2,
+    "enabled": true,
+    "status": "PASS",
+    "max_batches": 3,
+    "alpha": 0.1
+  },
+  {
+    "gpus": 2,
+    "enabled": false,
+    "status": "PASS",
+    "max_batches": 3,
+    "alpha": 0.1
+  }
+]

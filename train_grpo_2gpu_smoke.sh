@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -eo pipefail
-cd /g22538014wej/11x22f/Search-R1
+cd /g22538014wej/cityins1122/cityins
 source /opt/conda/etc/profile.d/conda.sh
-conda activate /g22538014wej/11x22f/envs/search1
-export PROJECT_CACHE_DIR=/g22538014wej/11x22f/Search-R1/data/cache
+conda activate /g22538014wej/cityins1122/envs/search1
+export PROJECT_CACHE_DIR=/g22538014wej/cityins1122/cityins/data/cache
 export HF_HOME="$PROJECT_CACHE_DIR/huggingface"
 export HF_DATASETS_CACHE="$HF_HOME/datasets"
 export XDG_CACHE_HOME="$PROJECT_CACHE_DIR/xdg"
-export TMPDIR=/g22538014wej/11x22f/tmp
-export RAY_TMPDIR=/g22538014wej/11x22f/ray
+export TMPDIR=/g22538014wej/cityins1122/tmp
+export RAY_TMPDIR=/g22538014wej/cityins1122/ray
 export NO_PROXY=127.0.0.1,localhost
 export no_proxy=127.0.0.1,localhost
 mkdir -p "$HF_DATASETS_CACHE" "$XDG_CACHE_HOME" "$TMPDIR" "$RAY_TMPDIR"
@@ -33,7 +33,7 @@ WAND_PROJECT='Search-R1'
 # export BASE_MODEL='meta-llama/Llama-3.1-8B-Instruct'
 # export EXPERIMENT_NAME=nq-search-r1-grpo-llama3.1-8b-it-em
 
-export BASE_MODEL='/g22538014wej/11x22f/Search-R1/models/Qwen2.5-3B'
+export BASE_MODEL='/g22538014wej/cityins1122/cityins/models/Qwen2.5-3B'
 export EXPERIMENT_NAME=smoke-b8-5u-20261111
 # export BASE_MODEL='Qwen/Qwen2.5-3B-Instruct'
 # export EXPERIMENT_NAME=nq-search-r1-grpo-qwen2.5-3b-it-em

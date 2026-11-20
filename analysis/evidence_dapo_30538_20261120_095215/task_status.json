@@ -1,0 +1,6 @@
+{
+  "status": "two_gpu_smoke_complete",
+  "formal_training_started": false,
+  "formal_training_authorized": false,
+  "test_entry": "test_evidence_dapo_2gpu.sh"
+}

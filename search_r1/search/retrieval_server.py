@@ -178,11 +178,12 @@ class BM25Retriever(BaseRetriever):
             ]
             results = [
                 {
+                    'id': hit.docid,
                     'title': content.split("\n")[0].strip("\""),
                     'text': "\n".join(content.split("\n")[1:]),
                     'contents': content
                 } 
-                for content in all_contents
+                for hit, content in zip(hits, all_contents)
             ]
         else:
             results = load_docs(self.corpus, [hit.docid for hit in hits])
@@ -338,11 +339,15 @@ def retrieve_endpoint(request: QueryRequest):
         request.topk = config.retrieval_topk  # fallback to default
 
     # Perform batch retrieval
-    results, scores = retriever.batch_search(
+    batch = retriever.batch_search(
         query_list=request.queries,
         num=request.topk,
         return_score=request.return_scores
     )
+    if request.return_scores:
+        results, scores = batch
+    else:
+        results = batch
     
     # Format response
     resp = []

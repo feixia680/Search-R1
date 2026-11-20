@@ -1,0 +1,145 @@
+model,budget,id,hops,em,answer,calls,first_visible_coverage,final_visible_coverage,termination,observed_outcome,later_queries_with_new_visible_support
+evidence,2,2hop__708145_30351,2,1,Austrian government,2,0.5,1.0,answer,correct,"[""Who did Friedrich Hayek work for after being hired by Ludwig von Mises?""]"
+evidence,2,3hop1__818422_160545_62931,3,0,Thailand,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,2,4hop2__161602_474028_88460_126088,4,0,India,2,0.0,0.25,answer,added_support_but_chain_incomplete,"[""Where is A Don located?""]"
+evidence,2,2hop__89657_289940,2,0,Minnesota Vikings,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+evidence,2,3hop2__25177_19506_23299,3,0,Poland,2,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""After World War II, where were Białystok and Przemyśl returned to?""]"
+evidence,2,4hop1__130404_59747_211319_557671,4,0,,2,0.25,0.25,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,2hop__682872_516436,2,0,Literature,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,2,3hop1__837871_831637_91775,3,0,Edsall,2,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""What are the destroyer classes of the United States Navy?""]"
+evidence,2,4hop1__43565_624859_355213_203322,4,0,Kent,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,2,2hop__159737_27110,2,0,1608 to 1948,2,0.0,0.5,answer,added_support_but_chain_incomplete,"[""When did the country withdraw its forces in accordance with the UN resolution of August 1948?""]"
+evidence,2,3hop2__132957_483843_40768,3,0,,2,0.3333333333333333,0.6666666666666666,search_budget_exhausted,attempted_search_beyond_budget,"[""Who is the manufacturer of Scion bbX?""]"
+evidence,2,4hop1__47210_53706_795904_580996,4,0,New York City,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,2,2hop__13106_158105,2,0,IPTV services on Xbox 360 and partnership with BT,2,0.5,1.0,answer,wrong_despite_full_visible_support,"[""What features were played up by Bill Gates when announcing IPTV in 2007?""]"
+evidence,2,3hop1__768500_730460_78782,3,0,John Knox,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,2,4hop1__408432_32392_823060_610794,4,0,South Carolina,2,0.25,0.5,answer,added_support_but_chain_incomplete,"[""What state is South Carolina a part of?""]"
+evidence,2,2hop__227791_75487,2,1,Andrew Scheer,2,0.5,1.0,answer,correct,"[""Who is the current leader of the Conservative Party of Canada?""]"
+evidence,2,3hop1__141138_2053_5289,3,0,PizzaExpress,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,2,4hop1__860115_798482_131926_89261,4,0,,2,0.25,0.25,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,2hop__61318_362941,2,0,"Mount Laurel, New Jersey",2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,2,3hop1__347858_503371_21711,3,0,,2,0.3333333333333333,0.6666666666666666,search_budget_exhausted,attempted_search_beyond_budget,"[""When was the Palau de la Generalitat constructed?""]"
+evidence,2,4hop3__193820_466199_128875_72134,4,0,,2,0.25,0.5,search_budget_exhausted,attempted_search_beyond_budget,"[""Where was Brantley York born?""]"
+evidence,2,2hop__840174_78851,2,0,New York Jets,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,2,3hop1__73796_87694_64412,3,0,1929,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,2,4hop1__749065_698949_157828_162309,4,0,1992,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+evidence,2,2hop__742831_156034,2,0,Nelson River,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,2,3hop1__79039_131926_87157,3,0,,2,0.0,0.0,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,4hop2__71753_261673_70784_79935,4,0,,2,0.0,0.0,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,2hop__145288_502838,2,0,Texas,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,2,3hop1__90327_83076_319330,3,1,Jessie Woodrow Wilson Sayre,2,0.3333333333333333,0.6666666666666666,answer,correct,"[""Who is the child of Woodrow Wilson?""]"
+evidence,2,4hop1__571599_49925_13759_736921,4,0,,2,0.25,0.5,search_budget_exhausted,attempted_search_beyond_budget,"[""Where did Mazombwe preach a sermon on Marian devotion before his death?""]"
+evidence,2,2hop__32441_274635,2,0,Army,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,2,3hop1__558449_503371_21711,3,0,1992,2,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""Who is Martin and where did he die in Aragon, Spain?""]"
+evidence,2,4hop1__525129_315334_131926_89261,4,0,,2,0.25,0.5,search_budget_exhausted,attempted_search_beyond_budget,"[""Where is Koerner, Ray & Glover from?""]"
+evidence,2,2hop__21104_16254,2,0,70%,1,1.0,1.0,answer,wrong_despite_full_visible_support,[]
+evidence,2,3hop1__433054_831637_91775,3,0,,2,0.3333333333333333,0.3333333333333333,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,4hop1__44149_32392_823060_610794,4,0,,2,0.25,0.25,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,2hop__95172_456836,2,0,Tunisia,2,0.5,1.0,answer,wrong_despite_full_visible_support,"[""Where was Claudia Cardinale born?""]"
+evidence,2,3hop1__593288_720914_41132,3,0,,2,0.3333333333333333,0.3333333333333333,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,4hop2__9988_158279_70784_61381,4,0,,2,0.0,0.0,search_budget_exhausted,attempted_search_beyond_budget,[]
+evidence,2,2hop__6827_75783,2,1,"July 1, 2008",2,0.5,1.0,answer,correct,"[""When was the company that bought FleetBoston Financial acquired by Bank of America?""]"
+evidence,2,3hop1__816887_127905_80286,3,0,,2,0.3333333333333333,0.6666666666666666,search_budget_exhausted,attempted_search_beyond_budget,"[""What league does the Cleveland Indians participate in?""]"
+evidence,2,4hop2__161602_426860_88460_20985,4,0,New Delhi,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,2,2hop__385392_756039,2,0,Idaho,2,0.5,1.0,answer,wrong_despite_full_visible_support,"[""What is the administrative territorial entity that includes Notus, Idaho?""]"
+evidence,2,3hop1__275261_443779_52195,3,1,Francisco Guterres,1,0.6666666666666666,0.6666666666666666,answer,correct,[]
+evidence,2,4hop1__58323_375563_161848_44231,4,0,Konrad Adenauer,2,0.25,0.25,answer,later_search_added_no_support,[]
+evidence,2,2hop__507528_139339,2,0,None,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,2,3hop2__36852_326964_7713,3,0,Over a thousand years,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,2,4hop1__690653_378185_282674_759393,4,0,Pécs,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,2hop__708145_30351,2,1,Austrian government,2,0.5,1.0,answer,correct,"[""Who did Friedrich Hayek work for after being hired by Ludwig von Mises?""]"
+evidence,4,3hop1__818422_160545_62931,3,0,Thailand,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,4,4hop2__161602_474028_88460_126088,4,0,India,2,0.0,0.25,answer,added_support_but_chain_incomplete,"[""Where is A Don located?""]"
+evidence,4,2hop__89657_289940,2,0,Minnesota Vikings,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+evidence,4,3hop2__25177_19506_23299,3,0,Poland,2,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""After World War II, where were Białystok and Przemyśl returned to?""]"
+evidence,4,4hop1__130404_59747_211319_557671,4,0,Fulton County,3,0.25,0.25,answer,later_search_added_no_support,[]
+evidence,4,2hop__682872_516436,2,0,Literature,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,3hop1__837871_831637_91775,3,0,Edsall,2,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""What are the destroyer classes of the United States Navy?""]"
+evidence,4,4hop1__43565_624859_355213_203322,4,0,Kent,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,2hop__159737_27110,2,0,1608 to 1948,2,0.0,0.5,answer,added_support_but_chain_incomplete,"[""When did the country withdraw its forces in accordance with the UN resolution of August 1948?""]"
+evidence,4,3hop2__132957_483843_40768,3,1,1981,3,0.3333333333333333,1.0,answer,correct,"[""Who is the manufacturer of Scion bbX?"", ""When did Nissan open its US assembly plants?""]"
+evidence,4,4hop1__47210_53706_795904_580996,4,0,New York City,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,2hop__13106_158105,2,0,IPTV services on Xbox 360 and partnership with BT,2,0.5,1.0,answer,wrong_despite_full_visible_support,"[""What features were played up by Bill Gates when announcing IPTV in 2007?""]"
+evidence,4,3hop1__768500_730460_78782,3,0,John Knox,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,4hop1__408432_32392_823060_610794,4,0,South Carolina,2,0.25,0.5,answer,added_support_but_chain_incomplete,"[""What state is South Carolina a part of?""]"
+evidence,4,2hop__227791_75487,2,1,Andrew Scheer,2,0.5,1.0,answer,correct,"[""Who is the current leader of the Conservative Party of Canada?""]"
+evidence,4,3hop1__141138_2053_5289,3,0,PizzaExpress,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,4,4hop1__860115_798482_131926_89261,4,0,Gulf of Mexico,3,0.25,0.5,answer,added_support_but_chain_incomplete,"[""What river flows by Minneapolis?""]"
+evidence,4,2hop__61318_362941,2,0,"Mount Laurel, New Jersey",2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,4,3hop1__347858_503371_21711,3,0,19th century,3,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""When was the Palau de la Generalitat constructed?""]"
+evidence,4,4hop3__193820_466199_128875_72134,4,1,1839,3,0.25,0.75,answer,correct,"[""Where was Brantley York born?"", ""When did Springfield, Illinois become the capital of North Carolina?""]"
+evidence,4,2hop__840174_78851,2,0,New York Jets,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,4,3hop1__73796_87694_64412,3,0,1929,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,4,4hop1__749065_698949_157828_162309,4,0,1992,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+evidence,4,2hop__742831_156034,2,0,Nelson River,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,4,3hop1__79039_131926_87157,3,0,South,3,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,4hop2__71753_261673_70784_79935,4,0,1967,3,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,2hop__145288_502838,2,0,Texas,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,4,3hop1__90327_83076_319330,3,1,Jessie Woodrow Wilson Sayre,2,0.3333333333333333,0.6666666666666666,answer,correct,"[""Who is the child of Woodrow Wilson?""]"
+evidence,4,4hop1__571599_49925_13759_736921,4,0,Zambia,3,0.25,0.5,answer,added_support_but_chain_incomplete,"[""Where did Mazombwe preach a sermon on Marian devotion before his death?""]"
+evidence,4,2hop__32441_274635,2,0,Army,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,3hop1__558449_503371_21711,3,0,1992,2,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""Who is Martin and where did he die in Aragon, Spain?""]"
+evidence,4,4hop1__525129_315334_131926_89261,4,0,Mississippi River,3,0.25,0.5,answer,added_support_but_chain_incomplete,"[""Where is Koerner, Ray & Glover from?""]"
+evidence,4,2hop__21104_16254,2,0,70%,1,1.0,1.0,answer,wrong_despite_full_visible_support,[]
+evidence,4,3hop1__433054_831637_91775,3,0,United States Navy,3,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""Who is the operator of the destroyer class?""]"
+evidence,4,4hop1__44149_32392_823060_610794,4,0,Cherokee County,3,0.25,0.25,answer,later_search_added_no_support,[]
+evidence,4,2hop__95172_456836,2,0,Tunisia,2,0.5,1.0,answer,wrong_despite_full_visible_support,"[""Where was Claudia Cardinale born?""]"
+evidence,4,3hop1__593288_720914_41132,3,1,22,3,0.3333333333333333,0.6666666666666666,answer,correct,"[""Plague outbreaks in Venice during Titian's lifetime (1488-1576)""]"
+evidence,4,4hop2__9988_158279_70784_61381,4,0,2006,3,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,2hop__6827_75783,2,1,"July 1, 2008",2,0.5,1.0,answer,correct,"[""When was the company that bought FleetBoston Financial acquired by Bank of America?""]"
+evidence,4,3hop1__816887_127905_80286,3,0,Dan Johnson,3,0.3333333333333333,0.6666666666666666,answer,added_support_but_chain_incomplete,"[""What league does the Cleveland Indians participate in?""]"
+evidence,4,4hop2__161602_426860_88460_20985,4,0,New Delhi,2,0.0,0.0,answer,later_search_added_no_support,[]
+evidence,4,2hop__385392_756039,2,0,Idaho,2,0.5,1.0,answer,wrong_despite_full_visible_support,"[""What is the administrative territorial entity that includes Notus, Idaho?""]"
+evidence,4,3hop1__275261_443779_52195,3,1,Francisco Guterres,1,0.6666666666666666,0.6666666666666666,answer,correct,[]
+evidence,4,4hop1__58323_375563_161848_44231,4,0,Konrad Adenauer,2,0.25,0.25,answer,later_search_added_no_support,[]
+evidence,4,2hop__507528_139339,2,0,None,2,0.5,0.5,answer,later_search_added_no_support,[]
+evidence,4,3hop2__36852_326964_7713,3,0,Over a thousand years,2,0.3333333333333333,0.3333333333333333,answer,later_search_added_no_support,[]
+evidence,4,4hop1__690653_378185_282674_759393,4,0,Pécs,2,0.0,0.0,answer,later_search_added_no_support,[]
+dynamic,4,2hop__708145_30351,2,0,Ludwig von Mises,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__818422_160545_62931,3,0,California,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop2__161602_474028_88460_126088,4,0,Narendra Modi,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__89657_289940,2,0,David Pollack,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop2__25177_19506_23299,3,0,Poland,1,0.6666666666666666,0.6666666666666666,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__130404_59747_211319_557671,4,0,Washoe County,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__682872_516436,2,0,author,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__837871_831637_91775,3,0,Underwater Demolition Teams,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__43565_624859_355213_203322,4,0,Montgomery County,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__159737_27110,2,0,1947–1948,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop2__132957_483843_40768,3,1,1981,1,0.6666666666666666,0.6666666666666666,answer,correct,[]
+dynamic,4,4hop1__47210_53706_795904_580996,4,0,Los Angeles,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__13106_158105,2,0,IPTV and Xbox 360,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__768500_730460_78782,3,0,James Wolfe,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__408432_32392_823060_610794,4,0,El Paso County,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__227791_75487,2,0,Stephen Harper,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__141138_2053_5289,3,0,EMI,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__860115_798482_131926_89261,4,0,Apalachicola Bay,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__61318_362941,2,0,"Washington, D.C.",1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__347858_503371_21711,3,0,14th century,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop3__193820_466199_128875_72134,4,0,1835,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__840174_78851,2,0,Melbourne Stars,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__73796_87694_64412,3,0,306,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__749065_698949_157828_162309,4,0,1896,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__742831_156034,2,0,Nelson River,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__79039_131926_87157,3,0,south,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop2__71753_261673_70784_79935,4,0,1878,1,0.25,0.25,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__145288_502838,2,0,"Duncanville, Texas",1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__90327_83076_319330,3,0,John F. Kennedy,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__571599_49925_13759_736921,4,0,Lusaka,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__32441_274635,2,0,Army,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__558449_503371_21711,3,0,1401,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__525129_315334_131926_89261,4,0,the Gulf of Mexico,1,0.25,0.25,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__21104_16254,2,0,92%,1,1.0,1.0,answer,wrong_despite_full_visible_support,[]
+dynamic,4,3hop1__433054_831637_91775,3,0,United States Navy,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__44149_32392_823060_610794,4,0,Berkeley County,1,0.25,0.25,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__95172_456836,2,0,Rome,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__593288_720914_41132,3,0,six,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop2__9988_158279_70784_61381,4,0,1876,1,0.25,0.25,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__6827_75783,2,0,"June 5, 2008",1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__816887_127905_80286,3,0,Ichiro Suzuki,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop2__161602_426860_88460_20985,4,0,Tulsa,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__385392_756039,2,0,Idaho,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop1__275261_443779_52195,3,0,Susilo Bambang Yudhoyono,1,0.6666666666666666,0.6666666666666666,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__58323_375563_161848_44231,4,0,Adolf Hitler,1,0.25,0.25,answer,answered_early_with_incomplete_support,[]
+dynamic,4,2hop__507528_139339,2,0,Griffin Dunne,1,0.5,0.5,answer,answered_early_with_incomplete_support,[]
+dynamic,4,3hop2__36852_326964_7713,3,0,1853,1,0.3333333333333333,0.3333333333333333,answer,answered_early_with_incomplete_support,[]
+dynamic,4,4hop1__690653_378185_282674_759393,4,0,Pécs,1,0.0,0.0,answer,answered_early_with_incomplete_support,[]

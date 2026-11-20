@@ -2,9 +2,9 @@
 # Bounded 10-update exploratory run with paired initial/final validation.
 set -eo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-BASE_ROOT=${BASE_ROOT:-/g22538014wej/11x22f/Search-R1}
+BASE_ROOT=${BASE_ROOT:-/g22538014wej/cityins1122/cityins}
 source /opt/conda/etc/profile.d/conda.sh
-conda activate /g22538014wej/11x22f/envs/search1
+conda activate /g22538014wej/cityins1122/envs/search1
 cd "$ROOT"
 export PYTHONPATH="$ROOT:${PYTHONPATH:-}"
 export CUDA_VISIBLE_DEVICES=${ALGORITHM_A_GPU:-0}
@@ -21,7 +21,7 @@ export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 export HF_HOME="$BASE_ROOT/data/cache/huggingface"
 export HF_DATASETS_CACHE="$HF_HOME/datasets"
 export RUN_DIR=${RUN_DIR:-"$ROOT/algorithm_a_runs/medium_$(date +%Y%m%d_%H%M%S)"}
-export RAY_TMPDIR=$(mktemp -d /g22538014wej/11x22f/r.XXXXXX)
+export RAY_TMPDIR=$(mktemp -d /g22538014wej/cityins1122/r.XXXXXX)
 export TMPDIR="$RUN_DIR/tmp"
 mkdir -p "$RUN_DIR" "$RAY_TMPDIR" "$TMPDIR"
 ln -s "$RAY_TMPDIR" "$RUN_DIR/ray_runtime"

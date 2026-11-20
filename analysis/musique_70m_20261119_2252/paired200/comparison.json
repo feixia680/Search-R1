@@ -1,0 +1,140 @@
+{
+  "n": 200,
+  "fixed_insufficient_n": 198,
+  "fixed_sufficient_n": 2,
+  "models": {
+    "evidence": {
+      "1": {
+        "em": 0.005,
+        "mean_calls": 1.0,
+        "correct": 1,
+        "complete": 2,
+        "mean_coverage": 0.2770833333333336,
+        "error_categories": {
+          "attempted_search_beyond_budget": 196,
+          "wrong_despite_full_visible_support": 2,
+          "answered_early_with_incomplete_support": 1,
+          "correct": 1
+        },
+        "fixed_insufficient_correct": 1,
+        "fixed_sufficient_calls": 2,
+        "second_search": 0
+      },
+      "2": {
+        "em": 0.11,
+        "mean_calls": 1.985,
+        "correct": 22,
+        "complete": 34,
+        "mean_coverage": 0.45999999999999985,
+        "error_categories": {
+          "correct": 22,
+          "later_search_added_no_support": 67,
+          "wrong_despite_full_visible_support": 18,
+          "added_support_but_chain_incomplete": 40,
+          "attempted_search_beyond_budget": 52,
+          "answered_early_with_incomplete_support": 1
+        },
+        "fixed_insufficient_correct": 22,
+        "fixed_sufficient_calls": 3,
+        "second_search": 197
+      },
+      "4": {
+        "em": 0.145,
+        "mean_calls": 2.275,
+        "correct": 29,
+        "complete": 37,
+        "mean_coverage": 0.47708333333333336,
+        "error_categories": {
+          "correct": 29,
+          "later_search_added_no_support": 93,
+          "wrong_despite_full_visible_support": 18,
+          "added_support_but_chain_incomplete": 58,
+          "answered_early_with_incomplete_support": 1,
+          "attempted_search_beyond_budget": 1
+        },
+        "fixed_insufficient_correct": 29,
+        "fixed_sufficient_calls": 3,
+        "second_search": 197
+      },
+      "paired_2_to_4": {
+        "gains": [
+          "3hop1__337705_132457_47686",
+          "3hop2__132957_483843_40768",
+          "3hop1__593288_720914_41132",
+          "3hop1__208108_547811_41132",
+          "4hop1__707078_765799_282674_759393",
+          "4hop1__130508_32392_823060_610794",
+          "4hop3__193820_466199_128875_72134"
+        ],
+        "losses": [],
+        "gains_with_new_support_after_second": [
+          "3hop1__337705_132457_47686",
+          "3hop2__132957_483843_40768",
+          "3hop1__593288_720914_41132",
+          "3hop1__208108_547811_41132",
+          "4hop1__707078_765799_282674_759393",
+          "4hop3__193820_466199_128875_72134"
+        ]
+      }
+    },
+    "dynamic": {
+      "1": {
+        "em": 0.08,
+        "mean_calls": 1.0,
+        "correct": 16,
+        "complete": 9,
+        "mean_coverage": 0.31750000000000034,
+        "error_categories": {
+          "answered_early_with_incomplete_support": 180,
+          "correct": 16,
+          "wrong_despite_full_visible_support": 4
+        },
+        "fixed_insufficient_correct": 15,
+        "fixed_sufficient_calls": 2,
+        "second_search": 0
+      },
+      "2": {
+        "em": 0.08,
+        "mean_calls": 1.0,
+        "correct": 16,
+        "complete": 9,
+        "mean_coverage": 0.31750000000000034,
+        "error_categories": {
+          "answered_early_with_incomplete_support": 180,
+          "correct": 16,
+          "wrong_despite_full_visible_support": 4
+        },
+        "fixed_insufficient_correct": 15,
+        "fixed_sufficient_calls": 2,
+        "second_search": 0
+      },
+      "4": {
+        "em": 0.08,
+        "mean_calls": 1.0,
+        "correct": 16,
+        "complete": 9,
+        "mean_coverage": 0.31750000000000034,
+        "error_categories": {
+          "answered_early_with_incomplete_support": 180,
+          "correct": 16,
+          "wrong_despite_full_visible_support": 4
+        },
+        "fixed_insufficient_correct": 15,
+        "fixed_sufficient_calls": 2,
+        "second_search": 0
+      },
+      "paired_2_to_4": {
+        "gains": [],
+        "losses": [],
+        "gains_with_new_support_after_second": []
+      }
+    }
+  },
+  "matched_cost_mixture_estimate": {
+    "mean_calls": 1.0,
+    "em": {
+      "evidence": 0.005,
+      "dynamic": 0.08
+    }
+  }
+}

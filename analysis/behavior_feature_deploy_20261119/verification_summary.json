@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "cpu_tests": 75,
+  "cpu_test_scopes": [
+    "tests/dynamic_sampling",
+    "tests/launchers",
+    "tests/algorithm_a"
+  ],
+  "config_checks": "4 standard configurations, 2 feature switches, 3 invalid behavior settings rejected",
+  "training_samples": 5000,
+  "strata": {
+    "first_insufficient": 3509,
+    "first_sufficient": 602,
+    "query_rewrite": 753,
+    "unobserved": 136
+  },
+  "historical_underuse_first_alert": 143,
+  "dataset_hash_unchanged": true,
+  "defaults": {
+    "stratification": true,
+    "monitoring": true,
+    "stop_on_alert": false
+  },
+  "mode": "Fully offline training; local BM25, no external Judge",
+  "gpu_smoke": "gpu_verification.json",
+  "limitation": "Only two 1-GPU updates verified; no full-training quality claim or 2-GPU run",
+  "pushed": false
+}

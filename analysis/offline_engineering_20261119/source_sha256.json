@@ -1,0 +1,17 @@
+{
+  "city_dynamic_2gpu_fast.sh": "ac16435ca472e8db859de2c2a108e7b27649559b1047e1cef33d50533cea03e8",
+  "run_engineering_benchmark_2gpu.sh": "cde8e85a4ffd06414b2234011844bd95717fbc417b8144d63bf2a360c8d393c7",
+  "search_r1/search/retrieval_client.py": "3a2670deeaa6e0cc0d4aafe9a5d5dc4d92f8a323d11a61951c3f91d458261999",
+  "search_r1/dynamic_sampling/engineering.py": "3e9aebd78adde6008c2ee819d53a59cadcdf976b270af2cff8f1588d7ec51ee1",
+  "search_r1/dynamic_sampling/loss_groups.py": "6ada7918bee559ad7be7fe4406faa8692b7612bdf1c36604da5e10f8ff2291ae",
+  "search_r1/llm_agent/generation.py": "dde2cccd8ace13297dffb3f267c0600d6575a19c4d569950eb0db9919b289a1e",
+  "verl/trainer/ppo/dynamic_sampling_trainer.py": "fa9ee737bc261ea19f0a8e3e3ddc6f686608271f01d9fa78f7c2e92fd0543aaf",
+  "verl/trainer/ppo/ray_trainer.py": "db1610c2ba7a90edc30b02b4cca1692f487dd344f054ffc3ecd7a92f995ece10",
+  "verl/trainer/main_dynamic_sampling.py": "1a929f753f145e36dcb7ac05ea5bced6131ffcbae4b9f1955dffaef82e0c3358",
+  "verl/workers/dynamic_sampling_worker.py": "cf01a5e19d3b0bc3242d7801d96c3db3111688a43c97005fe2a16c995b405c0e",
+  "verl/workers/actor/dynamic_sampling_actor.py": "c405cd96603652826c36c84166e990e06a4aa47cc81c97417ad94a59294c2e56",
+  "verl/trainer/config/dynamic_sampling.yaml": "78396ae9bf3d4e997aa95dac5dadc42024ef713717965305385b0289dce02aea",
+  "evaluation/benchmark_retrieval_runtime.py": "af141182153f98955bfdfdee39f1022efd41a63390d950916d16df60c22a892d",
+  "train_grpo_dynamic_sampling_1gpu.sh": "5c270cebcf3a47ae29a7700ea4dd065e0ffe487c5c5f4cdc9eb94374e89b650e",
+  "train_grpo_dynamic_sampling_2gpu.sh": "3569cde1bea123c382bbb3853fc20ed1fd7ec7e971fce97d5c71a01c16cef153"
+}

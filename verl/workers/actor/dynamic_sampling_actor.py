@@ -8,6 +8,7 @@ from verl.workers.actor.dp_actor import DataParallelPPOActor
 from verl.trainer.ppo import core_algos
 from verl.utils.py_functional import append_to_dict
 from verl.utils.torch_functional import masked_mean
+from search_r1.dynamic_sampling.loss_groups import grouped_masked_mean, grouped_policy_loss
 from verl.workers.dynamic_sampling_worker import collective_check
 import os
 
@@ -17,6 +18,11 @@ class GuardedDataParallelPPOActor(DataParallelPPOActor):
         self.actor_module.train()
         assert self.config.ppo_mini_batch_size % self.config.ppo_micro_batch_size == 0
         self.gradient_accumulation = self.config.ppo_mini_batch_size // self.config.ppo_micro_batch_size
+        loss_group = int(getattr(self.config, 'engineering_loss_group_size', 0))
+        if loss_group and self.config.ppo_micro_batch_size % loss_group:
+            raise ValueError('Microbatch must contain complete legacy loss groups')
+        def mean(values, mask):
+            return grouped_masked_mean(values, mask, loss_group) if loss_group else masked_mean(values, mask)
         temperature = data.meta_info['temperature']
         keys = ['responses', 'input_ids', 'attention_mask', 'position_ids', 'old_log_probs', 'advantages']
         if self.config.state_masking:
@@ -32,15 +38,17 @@ class GuardedDataParallelPPOActor(DataParallelPPOActor):
                 width = micro['responses'].shape[1]
                 mask = micro['loss_mask'] if self.config.state_masking else micro['attention_mask'][:, -width:]
                 entropy, log_prob = self._forward_micro_batch(micro_batch=micro, temperature=temperature)
-                pg_loss, clipfrac, ppo_kl = core_algos.compute_policy_loss(
+                loss_fn = core_algos.compute_policy_loss if not loss_group else (
+                    lambda **kw: grouped_policy_loss(**kw, group_size=loss_group))
+                pg_loss, clipfrac, ppo_kl = loss_fn(
                     old_log_prob=micro['old_log_probs'], log_prob=log_prob,
                     advantages=micro['advantages'], eos_mask=mask, cliprange=self.config.clip_ratio)
-                entropy_loss = masked_mean(entropy, mask)
+                entropy_loss = mean(entropy, mask)
                 loss = pg_loss - entropy_loss * self.config.entropy_coeff
                 if self.config.use_kl_loss:
                     kl = core_algos.kl_penalty(logprob=log_prob, ref_logprob=micro['ref_log_prob'],
                                               kl_penalty=self.config.kl_loss_type)
-                    kl_loss = masked_mean(kl, mask)
+                    kl_loss = mean(kl, mask)
                     loss = loss + kl_loss * self.config.kl_loss_coef
                     # Preserve legacy last-microbatch KL reporting.
                     metrics['actor/kl_loss'] = kl_loss.detach().item()

@@ -1,0 +1,22 @@
+[
+  "ALGORITHM_B_DYNAMIC_SAMPLING.md",
+  "evaluation/check_dynamic_sampling_configs.py",
+  "run_grpo_dynamic_sampling_1gpu_with_bm25.sh",
+  "run_grpo_dynamic_sampling_2gpu_with_bm25.sh",
+  "search_r1/dynamic_sampling/__init__.py",
+  "search_r1/dynamic_sampling/batching.py",
+  "search_r1/dynamic_sampling/selection.py",
+  "tests/dynamic_sampling/test_batching_and_trainer.py",
+  "tests/dynamic_sampling/test_collective_guard.py",
+  "tests/dynamic_sampling/test_guards.py",
+  "tests/dynamic_sampling/test_reward_integration.py",
+  "tests/dynamic_sampling/test_selection.py",
+  "tests/dynamic_sampling/test_training_loop.py",
+  "train_grpo_dynamic_sampling_1gpu.sh",
+  "train_grpo_dynamic_sampling_2gpu.sh",
+  "verl/trainer/config/dynamic_sampling.yaml",
+  "verl/trainer/main_dynamic_sampling.py",
+  "verl/trainer/ppo/dynamic_sampling_trainer.py",
+  "verl/workers/actor/dynamic_sampling_actor.py",
+  "verl/workers/dynamic_sampling_worker.py"
+]

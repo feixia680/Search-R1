@@ -1,0 +1,56 @@
+{
+  "kind": "offline_exact_query_replay",
+  "trace": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/traces/train.jsonl",
+  "unique_queries": 32,
+  "logical_queries": 64,
+  "workload_sha256": "347c5989e209fd1ca2854ef94a1ff999afec1f029bbb46ce112d67d729b9372f",
+  "identical_results": true,
+  "stages": {
+    "raw": {
+      "logical_queries": 64,
+      "backend_query_attempts": 64,
+      "backend_http_requests": 4,
+      "wall_seconds": 0.22343113701208495
+    },
+    "cold": {
+      "logical_queries": 64,
+      "unique_queries": 32,
+      "batch_duplicates": 32,
+      "cache_hits": 0,
+      "cache_writes": 32,
+      "cache_errors": 0,
+      "backend_http_requests": 4,
+      "backend_query_attempts": 32,
+      "retries": 0,
+      "failures": 0,
+      "wall_seconds": 0.11127822601702064
+    },
+    "memory_warm": {
+      "logical_queries": 64,
+      "unique_queries": 32,
+      "batch_duplicates": 32,
+      "cache_hits": 64,
+      "cache_writes": 0,
+      "cache_errors": 0,
+      "backend_http_requests": 0,
+      "backend_query_attempts": 0,
+      "retries": 0,
+      "failures": 0,
+      "wall_seconds": 0.00035643999581225216
+    },
+    "disk_warm": {
+      "logical_queries": 64,
+      "unique_queries": 32,
+      "batch_duplicates": 32,
+      "cache_hits": 64,
+      "cache_writes": 0,
+      "cache_errors": 0,
+      "backend_http_requests": 0,
+      "backend_query_attempts": 0,
+      "retries": 0,
+      "failures": 0,
+      "wall_seconds": 0.003604328987421468
+    }
+  },
+  "limitation": "Repeated-query benchmark; cache hit rate is workload dependent, not full training speedup."
+}

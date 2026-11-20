@@ -1,0 +1,25 @@
+{
+  "250": {
+    "evidence_only_correct": 24,
+    "with_new_second_evidence": 13,
+    "dynamic_incomplete_evidence": 21,
+    "evidence_full_coverage": 14
+  },
+  "500": {
+    "evidence_only_correct": 31,
+    "with_new_second_evidence": 26,
+    "dynamic_incomplete_evidence": 27,
+    "evidence_full_coverage": 25
+  },
+  "625": {
+    "evidence_only_correct": 35,
+    "with_new_second_evidence": 28,
+    "dynamic_incomplete_evidence": 28,
+    "evidence_full_coverage": 30
+  },
+  "query_stability": {
+    "375": 174,
+    "500": 193,
+    "625": 166
+  }
+}

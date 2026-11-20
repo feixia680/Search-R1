@@ -1,0 +1,4 @@
+{
+  "status": "INVALIDATED",
+  "reason": "Initial smoke exposed unscored generation records in monitoring; corrected scored-record interface and rerunning in separate directory. Training data and rewards were not changed."
+}

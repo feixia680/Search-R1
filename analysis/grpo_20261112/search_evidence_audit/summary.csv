@@ -1,0 +1,4 @@
+label,n_questions,questions_EM_correct,questions_all_support_sentences_in_corpus,questions_all_support_sentences_returned,questions_all_support_sentences_visible_1024tok,support_facts_total,support_facts_in_corpus,support_facts_returned_full_observation,support_facts_visible_1024tok,mean_support_fact_coverage_corpus,mean_support_fact_coverage_returned,mean_support_fact_coverage_visible,correct_questions_all_support_visible,correct_questions_no_support_sentence_visible,wrong_questions_all_support_visible,repeat_query_trajectories
+base,200,21,200,22,22,469,469,144,144,1.0,0.3070362473347548,0.3070362473347548,7,1,15,1
+step375,200,46,200,46,46,469,469,261,261,1.0,0.5565031982942431,0.5565031982942431,20,4,26,0
+step500,200,53,200,54,54,469,469,280,280,1.0,0.5970149253731343,0.5970149253731343,24,2,30,0

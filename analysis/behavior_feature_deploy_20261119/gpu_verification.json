@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "exit_code": 0,
+  "updates": [
+    {
+      "step": 1,
+      "candidates": 48,
+      "selected": 16,
+      "candidate_role_counts": {
+        "first_insufficient": 28,
+        "first_sufficient": 12,
+        "query_rewrite": 8
+      },
+      "evidence_eligible": 48,
+      "reward": 0.353125,
+      "coverage": 0.40625,
+      "grad_norm": 4.884674072265625,
+      "alerts": [
+        "SECOND_SEARCH_UNDERUSE_WITH_INCOMPLETE_EVIDENCE",
+        "MISSING_FINAL_ANSWER",
+        "SEARCH_BUDGET_TRUNCATION"
+      ]
+    },
+    {
+      "step": 2,
+      "candidates": 48,
+      "selected": 16,
+      "candidate_role_counts": {
+        "first_insufficient": 30,
+        "first_sufficient": 10,
+        "query_rewrite": 8
+      },
+      "evidence_eligible": 48,
+      "reward": 0.28072916666666664,
+      "coverage": 0.30729166666666663,
+      "grad_norm": 3.082180619239807,
+      "alerts": [
+        "SECOND_SEARCH_UNDERUSE_WITH_INCOMPLETE_EVIDENCE",
+        "MISSING_FINAL_ANSWER",
+        "SEARCH_BUDGET_TRUNCATION"
+      ]
+    }
+  ],
+  "run_dir": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/behavior_feature_smoke_1gpu_20261119_084345",
+  "aligned_selected_trajectories": 32,
+  "candidate_trajectories": 96,
+  "no_gpu_quality_claim": true
+}

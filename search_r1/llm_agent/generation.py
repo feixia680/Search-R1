@@ -27,6 +27,7 @@ class GenerationConfig:
     topk: int = 3
     search_timeout: float = 30.0
     record_evidence: bool = True
+    retrieval_runtime: dict = None
 
 class LLMGenerationManager:
     def __init__(
@@ -40,6 +41,12 @@ class LLMGenerationManager:
         self.actor_rollout_wg = actor_rollout_wg
         self.config = config
         self.is_validation = is_validation
+        self.retrieval_metrics = defaultdict(float)
+        self._retrieval_client = None
+        if config.retrieval_runtime is not None:
+            from search_r1.search.retrieval_client import RetrievalClient
+            self._retrieval_client = RetrievalClient(config.search_url, timeout=config.search_timeout,
+                                                     **config.retrieval_runtime)
 
         self.tensor_fn = TensorHelper(TensorConfig(
             pad_token_id=tokenizer.pad_token_id,
@@ -233,6 +240,7 @@ class LLMGenerationManager:
 
     def run_llm_loop(self, gen_batch, initial_input_ids: torch.Tensor) -> Tuple[Dict, Dict]:
         """Run main LLM generation loop."""
+        self.retrieval_metrics.clear()
         
         self._trajectories = [new_trajectory() for _ in range(len(initial_input_ids))]
         self._visibility = (VisibilityTracker(self.tokenizer, gen_batch.batch['input_ids'], self._trajectories)
@@ -481,7 +489,7 @@ class LLMGenerationManager:
                 seconds=elapsed, document_ids=[]) for _ in queries]
             return ['Retrieval failed; try a different query or answer with available evidence.'] * len(queries)
         observations = []
-        for result in results:
+        for result_index, result in enumerate(results):
             try:
                 observation = self._passages2string(result)
                 documents = []
@@ -493,12 +501,21 @@ class LLMGenerationManager:
             except (ValueError, KeyError, TypeError, AttributeError) as exc:
                 observation = 'Retrieval failed: malformed documents.'
                 outcome = dict(success=False, error=str(exc), document_ids=[])
+            if getattr(self, '_retrieval_client', None) is not None:
+                outcome.update(self._retrieval_client.last_outcomes[result_index])
+                if result is None:
+                    outcome['success'] = False
             outcome['seconds'] = time.perf_counter() - started
             self._last_search_outcomes.append(outcome)
             observations.append(observation)
         return observations
 
     def _batch_search(self, queries):
+        if getattr(self, '_retrieval_client', None) is not None:
+            rows = self._retrieval_client.retrieve(queries, self.config.topk)
+            for key, value in self._retrieval_client.last_stats.items():
+                self.retrieval_metrics[key] += value
+            return {"result": rows}
         
         payload = {
             "queries": queries,

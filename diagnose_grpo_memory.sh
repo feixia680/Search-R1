@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
-cd /g22538014wej/11x22f/Search-R1
+cd /g22538014wej/cityins1122/cityins
 source /opt/conda/etc/profile.d/conda.sh
-conda activate /g22538014wej/11x22f/envs/search1
+conda activate /g22538014wej/cityins1122/envs/search1
 export CUDA_VISIBLE_DEVICES=0,1
 export OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1
 export NO_PROXY=127.0.0.1,localhost
@@ -10,8 +10,8 @@ export no_proxy="$NO_PROXY"
 export HF_HOME="$PWD/data/cache/huggingface"
 export HF_DATASETS_CACHE="$HF_HOME/datasets"
 export XDG_CACHE_HOME="$PWD/data/cache/xdg"
-export TMPDIR=/g22538014wej/11x22f/tmp
-export RAY_TMPDIR=/g22538014wej/11x22f/ray
+export TMPDIR=/g22538014wej/cityins1122/tmp
+export RAY_TMPDIR=/g22538014wej/cityins1122/ray
 export VLLM_ATTENTION_BACKEND=XFORMERS
 export SEARCH_R1_MEMORY_DEBUG=1
 export SEARCH_R1_MEMORY_LIMIT_GB=96

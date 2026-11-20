@@ -1,0 +1,38 @@
+defaults:
+  - ppo_trainer
+  - _self_
+
+dynamic_sampling:
+  enabled: true
+  max_candidate_batches: 3
+  reward_range_epsilon: 1.0e-8
+  audit_dir: ${trainer.default_local_dir}/../sampling
+
+behavior_sampling:
+  enabled: true
+  manifest_path: null
+  uniform_fraction: 0.25
+  role_weights:
+    first_sufficient: 1.0
+    first_insufficient: 2.0
+    query_rewrite: 1.0
+
+behavior_monitor:
+  enabled: true
+  window_size: 10
+  warmup_steps: 100
+  min_second_search_rate: 0.05
+  min_incomplete_evidence_rate: 0.5
+  max_missing_answer_rate: 0.2
+  max_budget_blocked_rate: 0.1
+  min_target_trajectories: 16
+  stop_on_alert: false
+
+search_reward:
+  alpha: 0.1
+  beta: 0.0
+  gamma: 0.0
+  delta: 0.0
+  after_full_lambda: 0.0
+  require_final_answer: false
+  invalid_evidence_policy: skip

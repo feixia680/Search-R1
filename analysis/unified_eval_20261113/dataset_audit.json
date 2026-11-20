@@ -1,0 +1,11 @@
+{
+  "original200_exact_manifest_order_match": true,
+  "selected_raw_ids_overlap_training": 0,
+  "n_original": 200,
+  "n_new": 500,
+  "manifest_sha256": "40039cba279090a38fd833e4986852161fa2b5f306eb59cfab5b9fc1e89913dd",
+  "data_sha256": {
+    "algorithm_a_data/evidence/train.parquet": "cdeacb2faef17630fd4c40785e92ad39e0d389add868ed72136ed6ee9c8b5c75",
+    "algorithm_a_data/evidence/test.parquet": "29a1225cd6e98ba5e11f61df5e0bdc674df8380098f10f739dfd72648fa4d6c7"
+  }
+}

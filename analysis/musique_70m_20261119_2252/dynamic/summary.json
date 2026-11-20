@@ -1,0 +1,44 @@
+{
+  "model": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/dynamic_sampling_1gpu_a0.1_s42_20261118_085420/checkpoints/actor/global_step_500",
+  "split": "dev200",
+  "budgets": {
+    "4": {
+      "n": 48,
+      "em": 0.020833333333333332,
+      "mean_calls": 1.0,
+      "evidence_complete": 0.020833333333333332,
+      "mean_coverage": 0.2934027777777778,
+      "no_answer": 0.0,
+      "exhausted": 0.0,
+      "by_hops": {
+        "2": {
+          "n": 16,
+          "em": 0.0,
+          "mean_calls": 1.0,
+          "evidence_complete": 0.0625,
+          "mean_coverage": 0.40625,
+          "no_answer": 0.0,
+          "exhausted": 0.0
+        },
+        "3": {
+          "n": 16,
+          "em": 0.0625,
+          "mean_calls": 1.0,
+          "evidence_complete": 0.0,
+          "mean_coverage": 0.33333333333333337,
+          "no_answer": 0.0,
+          "exhausted": 0.0
+        },
+        "4": {
+          "n": 16,
+          "em": 0.0,
+          "mean_calls": 1.0,
+          "evidence_complete": 0.0,
+          "mean_coverage": 0.140625,
+          "no_answer": 0.0,
+          "exhausted": 0.0
+        }
+      }
+    }
+  }
+}

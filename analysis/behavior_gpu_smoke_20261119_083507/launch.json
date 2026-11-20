@@ -1,0 +1,16 @@
+{
+  "pid": 3155,
+  "run_dir": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/behavior_feature_smoke_1gpu_20261119_083507",
+  "audit_dir": "/g22538014wej/cityins1122/cityins/analysis/behavior_gpu_smoke_20261119_083507",
+  "command": [
+    "bash",
+    "city_dynamic_1gpu.sh",
+    "trainer.total_training_steps=3",
+    "trainer.test_freq=-1",
+    "trainer.save_freq=-1",
+    "+trainer.skip_final_validation=true",
+    "behavior_monitor.window_size=1",
+    "behavior_monitor.warmup_steps=0",
+    "behavior_monitor.min_target_trajectories=2"
+  ]
+}

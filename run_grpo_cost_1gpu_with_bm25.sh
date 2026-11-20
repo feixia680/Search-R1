@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Start/reuse local BM25, then run the dynamic_sampling-reward 1-GPU experiment.
-# Usage: bash run_grpo_dynamic_sampling_1gpu_with_bm25.sh [Hydra overrides...]
-# Config only: bash run_grpo_dynamic_sampling_1gpu_with_bm25.sh --print-config
+# Start/reuse local BM25, then run the evidence/cost 1-GPU experiment.
+# Usage: bash run_grpo_cost_1gpu_with_bm25.sh [Hydra overrides...]
+# Config only: bash run_grpo_cost_1gpu_with_bm25.sh --print-config
 set -eo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-CONDA_ENV=${CONDA_ENV:-/g22538014wej/11x22f/envs/search1}
+CONDA_ENV=${CONDA_ENV:-/g22538014wej/cityins1122/envs/search1}
 source /opt/conda/etc/profile.d/conda.sh
 conda activate "$CONDA_ENV"
 cd "$ROOT"
@@ -13,12 +13,12 @@ export no_proxy="127.0.0.1,localhost${no_proxy:+,$no_proxy}"
 
 if [[ "${1:-}" == --print-config ]]; then
   shift
-  exec bash "$ROOT/train_grpo_dynamic_sampling_1gpu.sh" --print-config "$@"
+  exec bash "$ROOT/train_grpo_cost_1gpu.sh" --print-config "$@"
 fi
 
 expected_gpus=1
 selected_gpus=${CUDA_VISIBLE_DEVICES:-0}
-gpu_count=$(nvidia-smi -L | wc -l)
+gpu_count=$(nvidia-smi -L 2>/dev/null | grep -Ec '^GPU [0-9]+:' || true)
 if [[ "$gpu_count" -lt "$expected_gpus" ]]; then
   echo "需要至少 1 张可见 GPU，当前检测到 $gpu_count 张。" >&2
   exit 1
@@ -51,7 +51,7 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 if ! curl -fsS --max-time 2 http://127.0.0.1:8000/docs >/dev/null 2>&1; then
-  bm25_log="logs/retrieval_bm25_dynamic_sampling_1gpu_$(date +%Y%m%d_%H%M%S).log"
+  bm25_log="logs/retrieval_bm25_cost_1gpu_$(date +%Y%m%d_%H%M%S).log"
   bash start_bm25_local.sh > "$bm25_log" 2>&1 &
   retriever_pid=$!
   ready=0
@@ -72,4 +72,4 @@ if ! curl -fsS --max-time 2 http://127.0.0.1:8000/docs >/dev/null 2>&1; then
     exit 1
   fi
 fi
-bash "$ROOT/train_grpo_dynamic_sampling_1gpu.sh" "$@"
+bash "$ROOT/train_grpo_cost_1gpu.sh" "$@"

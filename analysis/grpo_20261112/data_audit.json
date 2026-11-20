@@ -1,0 +1,8 @@
+{
+  "train_rows": 5000,
+  "evaluation_rows": 200,
+  "exact_question_overlap_with_train": 0,
+  "overlapping_questions": [],
+  "train_file_sha256": "5a3bcba13763a279b06b00a4491174f5e75eb8d29daa0adcf42a3c3a98bab883",
+  "evaluation_source_sha256": "f74710ea34945d1a8d812249a609564f362fc776b2d7c104df1180a9e1bb4360"
+}

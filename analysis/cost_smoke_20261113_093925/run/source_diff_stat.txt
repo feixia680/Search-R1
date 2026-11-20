@@ -1,0 +1,6 @@
+ search_r1/llm_agent/evidence.py      | 36 ++++++++++++++++++++++++++++++++++++
+ search_r1/llm_agent/trajectory.py    | 19 ++++++++++++++-----
+ tests/algorithm_a/test_evidence.py   | 24 ++++++++++++++++++++++++
+ verl/trainer/config/ppo_trainer.yaml |  1 +
+ verl/trainer/main_ppo.py             | 26 +++++++++++++++++++-------
+ 5 files changed, 94 insertions(+), 12 deletions(-)

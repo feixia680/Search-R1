@@ -1,0 +1,252 @@
+{
+  "support_fact_count_distribution": {
+    "train": {
+      "2": 3511,
+      "4": 345,
+      "3": 1083,
+      "5": 42,
+      "7": 2,
+      "6": 11,
+      "12": 1,
+      "9": 1,
+      "8": 2
+    },
+    "test": {
+      "2": 3364,
+      "3": 1200,
+      "5": 57,
+      "4": 361,
+      "7": 6,
+      "6": 9
+    }
+  },
+  "groups": {
+    "train_all": {
+      "n": 9984,
+      "mean_calls": 1.5066105769230769,
+      "positive_gains": 10516,
+      "median_positive_gain": 0.5,
+      "missing_answer": 2107,
+      "missing_termination": {
+        "turn_limit": 733,
+        "search_budget_exhausted": 1365,
+        "answer": 9
+      },
+      "missing_last_action": {
+        "invalid": 733,
+        "search": 1365,
+        "answer": 9
+      },
+      "after_full_calls": 741,
+      "candidates": [
+        {
+          "beta": 0,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.0,
+          "mean_guarded_reward": 0.19572565310846562,
+          "positive_gain_calls_with_bonus_above_base_cost": 10516,
+          "positive_gain_calls": 10516
+        },
+        {
+          "beta": 0.002,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.0030132211538461537,
+          "mean_guarded_reward": 0.19245802490333744,
+          "positive_gain_calls_with_bonus_above_base_cost": 10516,
+          "positive_gain_calls": 10516
+        },
+        {
+          "beta": 0.005,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.007533052884615385,
+          "mean_guarded_reward": 0.18755658259564512,
+          "positive_gain_calls_with_bonus_above_base_cost": 10516,
+          "positive_gain_calls": 10516
+        },
+        {
+          "beta": 0.01,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.01506610576923077,
+          "mean_guarded_reward": 0.1793875120828246,
+          "positive_gain_calls_with_bonus_above_base_cost": 10516,
+          "positive_gain_calls": 10516
+        },
+        {
+          "beta": 0.02,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.03013221153846154,
+          "mean_guarded_reward": 0.16304937105718356,
+          "positive_gain_calls_with_bonus_above_base_cost": 10514,
+          "positive_gain_calls": 10516
+        },
+        {
+          "beta": 0.05,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.07533052884615385,
+          "mean_guarded_reward": 0.11403494798026047,
+          "positive_gain_calls_with_bonus_above_base_cost": 3021,
+          "positive_gain_calls": 10516
+        },
+        {
+          "beta": 0.005,
+          "after_full_lambda": 0.01,
+          "mean_resource_cost": 0.008275240384615384,
+          "mean_guarded_reward": 0.18270582137769642,
+          "positive_gain_calls_with_bonus_above_base_cost": 10516,
+          "positive_gain_calls": 10516
+        }
+      ]
+    },
+    "train_steps375plus": {
+      "n": 4000,
+      "mean_calls": 1.82525,
+      "positive_gains": 5210,
+      "median_positive_gain": 0.5,
+      "missing_answer": 434,
+      "missing_termination": {
+        "search_budget_exhausted": 383,
+        "turn_limit": 48,
+        "answer": 3
+      },
+      "missing_last_action": {
+        "search": 383,
+        "invalid": 48,
+        "answer": 3
+      },
+      "after_full_calls": 425,
+      "candidates": [
+        {
+          "beta": 0,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.0,
+          "mean_guarded_reward": 0.4502139285714286,
+          "positive_gain_calls_with_bonus_above_base_cost": 5210,
+          "positive_gain_calls": 5210
+        },
+        {
+          "beta": 0.002,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.0036505,
+          "mean_guarded_reward": 0.44654292857142863,
+          "positive_gain_calls_with_bonus_above_base_cost": 5210,
+          "positive_gain_calls": 5210
+        },
+        {
+          "beta": 0.005,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.00912625,
+          "mean_guarded_reward": 0.4410364285714286,
+          "positive_gain_calls_with_bonus_above_base_cost": 5210,
+          "positive_gain_calls": 5210
+        },
+        {
+          "beta": 0.01,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.0182525,
+          "mean_guarded_reward": 0.4318589285714286,
+          "positive_gain_calls_with_bonus_above_base_cost": 5210,
+          "positive_gain_calls": 5210
+        },
+        {
+          "beta": 0.02,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.036505,
+          "mean_guarded_reward": 0.4135039285714286,
+          "positive_gain_calls_with_bonus_above_base_cost": 5210,
+          "positive_gain_calls": 5210
+        },
+        {
+          "beta": 0.05,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.09126250000000001,
+          "mean_guarded_reward": 0.35843892857142856,
+          "positive_gain_calls_with_bonus_above_base_cost": 1382,
+          "positive_gain_calls": 5210
+        },
+        {
+          "beta": 0.005,
+          "after_full_lambda": 0.01,
+          "mean_resource_cost": 0.01018875,
+          "mean_guarded_reward": 0.4378864285714286,
+          "positive_gain_calls_with_bonus_above_base_cost": 5210,
+          "positive_gain_calls": 5210
+        }
+      ]
+    },
+    "original200_autonomous": {
+      "n": 200,
+      "mean_calls": 1.925,
+      "positive_gains": 285,
+      "median_positive_gain": 0.5,
+      "missing_answer": 16,
+      "missing_termination": {
+        "search_budget_exhausted": 15,
+        "turn_limit": 1
+      },
+      "missing_last_action": {
+        "search": 15,
+        "invalid": 1
+      },
+      "after_full_calls": 24,
+      "candidates": [
+        {
+          "beta": 0,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.0,
+          "mean_guarded_reward": 0.3890916666666667,
+          "positive_gain_calls_with_bonus_above_base_cost": 285,
+          "positive_gain_calls": 285
+        },
+        {
+          "beta": 0.002,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.00385,
+          "mean_guarded_reward": 0.3852316666666667,
+          "positive_gain_calls_with_bonus_above_base_cost": 285,
+          "positive_gain_calls": 285
+        },
+        {
+          "beta": 0.005,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.009625,
+          "mean_guarded_reward": 0.3794416666666667,
+          "positive_gain_calls_with_bonus_above_base_cost": 285,
+          "positive_gain_calls": 285
+        },
+        {
+          "beta": 0.01,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.01925,
+          "mean_guarded_reward": 0.3697916666666667,
+          "positive_gain_calls_with_bonus_above_base_cost": 285,
+          "positive_gain_calls": 285
+        },
+        {
+          "beta": 0.02,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.0385,
+          "mean_guarded_reward": 0.3504916666666667,
+          "positive_gain_calls_with_bonus_above_base_cost": 285,
+          "positive_gain_calls": 285
+        },
+        {
+          "beta": 0.05,
+          "after_full_lambda": 0,
+          "mean_resource_cost": 0.09625,
+          "mean_guarded_reward": 0.29259166666666664,
+          "positive_gain_calls_with_bonus_above_base_cost": 62,
+          "positive_gain_calls": 285
+        },
+        {
+          "beta": 0.005,
+          "after_full_lambda": 0.01,
+          "mean_resource_cost": 0.010825,
+          "mean_guarded_reward": 0.3766916666666667,
+          "positive_gain_calls_with_bonus_above_base_cost": 285,
+          "positive_gain_calls": 285
+        }
+      ]
+    }
+  },
+  "warning": "Reward replay only. All candidate arms use the same final-answer guard. No causal prediction of new EM, call counts, or best beta."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "CPU_VALIDATED_GPU_SMOKE_PENDING",
+  "new_files": 20,
+  "original_files_checked": 280,
+  "original_files_modified": [],
+  "cpu_tests_passed": 21,
+  "configurations_checked": 4,
+  "shell_scripts_checked": 4,
+  "real_gpu_training_launched": false
+}

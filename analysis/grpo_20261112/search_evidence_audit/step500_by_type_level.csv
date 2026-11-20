@@ -1,0 +1,4 @@
+group_by,group,n,EM,all_support_visible_rate,mean_support_fact_visible_fraction,visible_support_count,support_count
+level,hard,200,0.265,0.27,0.5950833333333333,280,469
+type,bridge,165,0.2545454545454545,0.2727272727272727,0.5980808080808079,235,393
+type,comparison,35,0.3142857142857143,0.2571428571428571,0.5809523809523809,45,76

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -eo pipefail
-cd /g22538014wej/11x22f/Search-R1
+cd /g22538014wej/cityins1122/cityins
 source /opt/conda/etc/profile.d/conda.sh
-conda activate /g22538014wej/11x22f/envs/search1
+conda activate /g22538014wej/cityins1122/envs/search1
 export NO_PROXY=127.0.0.1,localhost
 export no_proxy=127.0.0.1,localhost
 export SEARCH_R1_MEMORY_DEBUG=1
-export SEARCH_R1_MEMORY_DIR=/g22538014wej/11x22f/Search-R1/logs/smoke_b8_5u_20261111
+export SEARCH_R1_MEMORY_DIR=/g22538014wej/cityins1122/cityins/logs/smoke_b8_5u_20261111
 export SEARCH_R1_MEMORY_LIMIT_GB=96
-gpu_count=$(nvidia-smi -L | wc -l)
+gpu_count=$(nvidia-smi -L 2>/dev/null | grep -Ec '^GPU [0-9]+:' || true)
 if [[ "$gpu_count" -lt 2 ]]; then
   echo "需要至少 2 张可见 GPU，当前检测到 $gpu_count 张。"
   exit 1

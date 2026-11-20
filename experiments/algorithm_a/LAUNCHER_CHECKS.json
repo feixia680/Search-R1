@@ -1,0 +1,19 @@
+{
+  "bash_syntax": "passed",
+  "hydra_1gpu_preview": "passed",
+  "hydra_2gpu_preview": "passed",
+  "global_batch": 8,
+  "global_micro_batch": 2,
+  "alpha": 0.1,
+  "search_budget": 2,
+  "scheduler_steps": 625,
+  "training_launched": false,
+  "structure_update_20261113": {
+    "bash_syntax": "passed",
+    "preflight_python_syntax": "passed",
+    "before_after_config_equality": "passed_except_timestamped_output_paths",
+    "bm25_wrapper_previews": "passed",
+    "hydra_override_forwarding": "passed",
+    "training_launched": false
+  }
+}

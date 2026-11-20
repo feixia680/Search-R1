@@ -1,0 +1,16 @@
+[
+  {
+    "run": "evidence",
+    "groups_per_step": 8,
+    "rows_per_group": 2,
+    "trace_zero_batches": 7,
+    "logged_zero_batches": 7
+  },
+  {
+    "run": "cost",
+    "groups_per_step": 8,
+    "rows_per_group": 2,
+    "trace_zero_batches": 147,
+    "logged_zero_batches": 147
+  }
+]

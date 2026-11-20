@@ -1,0 +1,45 @@
+{
+  "label": "step500",
+  "model": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_500",
+  "policies": {
+    "fixed_one": {
+      "n": 200,
+      "em": 0.25,
+      "correct": 50,
+      "mean_calls": 1.0,
+      "second_calls": 0,
+      "coverage": 0.5950833333333333,
+      "mean_added_coverage": 0.0
+    },
+    "fixed_two": {
+      "n": 200,
+      "em": 0.285,
+      "correct": 57,
+      "mean_calls": 2.0,
+      "second_calls": 200,
+      "coverage": 0.6425833333333333,
+      "mean_added_coverage": 0.0475
+    },
+    "adaptive": {
+      "n": 200,
+      "em": 0.265,
+      "correct": 53,
+      "mean_calls": 1.3,
+      "second_calls": 60,
+      "coverage": 0.6125833333333334,
+      "mean_added_coverage": 0.0175
+    }
+  },
+  "seconds": 44.30620765686035,
+  "settings": {
+    "seed": 42,
+    "adaptive_confidence_threshold": 0.8,
+    "adaptive_uses_gold": false,
+    "greedy": true,
+    "topk": 3,
+    "max_obs_tokens": 1024,
+    "forced_query_and_answer_prefixes": true,
+    "paired_shared_first_hop": true,
+    "adaptive_counterfactual_branch_reuse": true
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "commit": "0c21297e799b3408f91828dd279a13ec4f0e98fe",
+  "files": {
+    "verl/trainer/evidence_reward_20261112.py": "8961989028e289e0a997a1a6825534074cf2142a3095ec981a1a801d5a59f913",
+    "verl/trainer/main_evidence_20261112.py": "e9ab239a165ef2031b65461fb2af97dd524c833eb66a572c43bd79c7d87d910c",
+    "analysis/followup_20261112/summarize.py": "b205ff8edfe57aeca8feca4bf4e52d0106d793bcd26943f6b1bdf8fb454bc1ac",
+    "analysis/followup_20261112/policy_report.py": "d5eaf7a73daf4cbf9311ad39d8d0160fbede75012b879001274d36609c62295b",
+    "analysis/followup_20261112/policy_eval.py": "367b7e53321a7066c060080a26ee9d3bb3ab9f29611bacaf24859abaaaa5eb4a",
+    "analysis/followup_20261112/train_variant.sh": "e9a9913d4b318c7050707883f0541c1c7fd2954fe6267724b33cc000ee1a4dfd",
+    "analysis/followup_20261112/run_all.sh": "5e97a20b21e28a7b6f0bbd97d748d20f5b038d38784f5e2e8cc5997f2969a2ad",
+    "analysis/followup_20261112/train_eligible.parquet": "af51c3e9628d9811326c3fc43a00e1ec7d132db6f8c2cdb0c86131355b7b8e77"
+  },
+  "training_updates_per_group": 125,
+  "candidate_training_rows": 1008,
+  "seed": 42,
+  "alpha": 0.5,
+  "beta": 0.05,
+  "variants": [
+    "em",
+    "evidence",
+    "evidence_cost"
+  ]
+}

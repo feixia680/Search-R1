@@ -53,10 +53,12 @@ class RewardManager():
         self.require_final_answer, self.max_search_calls = require_final_answer, max_search_calls
         self.trace_dir, self.split = trace_dir, split
         self.last_metrics = {}
+        self.last_records = []
         self.call_index = 0
 
     def __call__(self, data: DataProto):
         """We will expand this function gradually based on the available datasets"""
+        self.last_records = []
 
         # If there is rm score, we directly return rm score. Otherwise, we compute via rm_score_fn
         if 'rm_scores' in data.batch.keys():
@@ -151,6 +153,9 @@ class RewardManager():
         # print(f"[DEBUG] all_scores min: {np.min(all_scores)}")
         # print(f"[DEBUG] all_scores std: {np.std(all_scores)}")
 
+        # Read-only scored records for diagnostics. Raw generation trajectories
+        # intentionally remain unchanged; these records include evidence/reward.
+        self.last_records = rows
         fields = ['em', 'search_cost', 'repetition_cost', 'after_full_cost',
                   'after_full_search_calls', 'search_state_eligible', 'total_reward',
                   'search_actions', 'retrieval_attempts', 'retrieval_successes',

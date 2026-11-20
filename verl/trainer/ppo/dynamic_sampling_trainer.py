@@ -11,8 +11,11 @@ import torch
 from verl import DataProto
 from verl.trainer.ppo.ray_trainer import RayPPOTrainer, compute_advantage, reduce_metrics, compute_data_metrics
 from search_r1.llm_agent.generation import GenerationConfig, LLMGenerationManager
+from search_r1.search.retrieval_client import runtime_options
 from search_r1.dynamic_sampling.selection import BoundedGroupSelector
 from search_r1.dynamic_sampling.batching import merge_groups
+from search_r1.dynamic_sampling.stratified import StratifiedQuestionSampler, load_manifest
+from search_r1.dynamic_sampling.behavior import BehaviorMonitor, compact_trace, summarize_scopes, flatten
 
 
 class DynamicSamplingTrainer(RayPPOTrainer):
@@ -24,16 +27,54 @@ class DynamicSamplingTrainer(RayPPOTrainer):
         self.audit_dir.mkdir(parents=True, exist_ok=True)
         self._data_iterator = None
         self._candidate_epoch = 0
+        self._stratified_sampler = None
+        self._behavior_monitor = None
+        self._behavior_roles = {}
+        self._behavior_excluded_ids = set()
+        self._pending_behavior_report = None
+        behavior = self.config.get('behavior_sampling', {})
+        monitor = self.config.get('behavior_monitor', {})
+        if behavior.get('enabled', False) or monitor.get('enabled', False):
+            files = self.config.data.train_files
+            files = [files] if isinstance(files, str) else list(files)
+            if len(files) != 1:
+                raise ValueError('Offline behavior strata currently require one training parquet')
+            path = behavior.get('manifest_path') or str(Path(files[0]).parent/'behavior_strata.json')
+            sample_ids = [str(extra['index']) for extra in self.train_dataset.dataframe.extra_info]
+            manifest = load_manifest(path, files[0], sample_ids)
+            self._behavior_roles = manifest['roles']
+            (self.audit_dir/'behavior_strata_snapshot.json').write_text(json.dumps(manifest, sort_keys=True)+'\n')
+            if behavior.get('enabled', False):
+                self._stratified_sampler = StratifiedQuestionSampler(
+                    sample_ids, manifest['roles'], int(self.config.data.train_batch_size),
+                    seed=int(self.config.trainer.get('seed', 42)),
+                    uniform_fraction=float(behavior.get('uniform_fraction', .25)),
+                    role_weights=dict(behavior.get('role_weights', {})))
+            if monitor.get('enabled', False):
+                self._behavior_monitor = BehaviorMonitor(self.audit_dir,
+                    **{key: value for key, value in monitor.items() if key != 'enabled'})
 
     def _next_questions(self):
+        sampler = getattr(self, '_stratified_sampler', None)
+        if sampler is not None:
+            from verl.utils.dataset.rl_dataset import collate_fn
+            positions, self._last_strata_draw = sampler.sample(self._behavior_excluded_ids)
+            items = [self.train_dataset[position] for position in positions]
+            for item in items:
+                item['behavior_stratum'] = self._behavior_roles[str(item['index'])]
+            self._candidate_epoch = sampler.total_drawn // len(sampler.sample_ids)
+            return collate_fn(items)
         if self._data_iterator is None:
             self._data_iterator = iter(self.train_dataloader)
         try:
-            return next(self._data_iterator)
+            result = next(self._data_iterator)
         except StopIteration:
             self._candidate_epoch += 1
             self._data_iterator = iter(self.train_dataloader)
-            return next(self._data_iterator)
+            result = next(self._data_iterator)
+        if getattr(self, '_behavior_roles', None):
+            result['behavior_stratum'] = np.array([self._behavior_roles[str(sid)] for sid in result['index']], dtype=object)
+        return result
 
     def _append(self, name, record):
         with (self.audit_dir / name).open('a') as out:
@@ -61,6 +102,19 @@ class DynamicSamplingTrainer(RayPPOTrainer):
         if not torch.isfinite(rewards).all():
             raise FloatingPointError('Candidate token-level rewards are nonfinite')
         batch.batch['sampling_reward'] = rewards.sum(dim=-1)
+        if getattr(self, '_behavior_monitor', None) is not None:
+            records = getattr(self.candidate_reward_fn, 'last_records', None)
+            if records is None or len(records) != len(batch):
+                raise ValueError('Behavior diagnostics require aligned scored reward records')
+            roles = batch.non_tensor_batch.get('behavior_stratum', ['unobserved'] * len(batch))
+            compact = []
+            for i, record in enumerate(records):
+                if str(record.get('sample_id')) != str(batch.non_tensor_batch['index'][i]):
+                    raise ValueError('Behavior scored record sample ID is misaligned')
+                if not math.isclose(float(record['total_reward']), float(batch.batch['sampling_reward'][i]), abs_tol=1e-7, rel_tol=1e-7):
+                    raise ValueError('Behavior scored record reward is misaligned')
+                compact.append(compact_trace(record, batch.non_tensor_batch['uid'][i], roles[i]))
+            batch.non_tensor_batch['behavior_record'] = np.array(compact, dtype=object)
         return batch, elapsed
 
     def _collect(self, manager, step):
@@ -71,12 +125,19 @@ class DynamicSamplingTrainer(RayPPOTrainer):
             epsilon=float(self.sampling.reward_range_epsilon),
             enabled=bool(self.sampling.enabled), seed=int(self.config.trainer.get('seed', 42)) + step)
         batches = []
+        self._behavior_excluded_ids = set()
+        draws = []
+        runtime_stats = Counter()
         generation_seconds = 0.
         generated_tokens = observation_tokens = response_tokens = retrieval_calls = failures = missing = 0
         for round_id in range(selector.max_batches):
             batch, elapsed = self._candidate(manager, step, round_id)
             generation_seconds += elapsed
+            runtime_stats.update(getattr(manager, "retrieval_metrics", {}))
             batches.append(batch)
+            self._behavior_excluded_ids.update(map(str, batch.non_tensor_batch['index']))
+            if getattr(self, '_stratified_sampler', None) is not None:
+                draws.append(self._last_strata_draw)
             selector.offer(round_id, batch.non_tensor_batch['index'].tolist(),
                            batch.batch['sampling_reward'].tolist())
             width = batch.batch['prompts'].shape[1]
@@ -109,9 +170,40 @@ class DynamicSamplingTrainer(RayPPOTrainer):
         counts = Counter(merged.non_tensor_batch['uid'])
         if len(counts) != selector.target or set(counts.values()) != {selector.group_size}:
             raise ValueError('GRPO group identity was lost during selection/merge')
-        return merged, {'sampling/'+key: value for key, value in stats.items()}
+        metrics = {'sampling/'+key: value for key, value in stats.items()}
+        metrics.update({'engineering/retrieval/'+key: value for key, value in runtime_stats.items()})
+        if getattr(self, '_behavior_monitor', None) is not None:
+            def records(data):
+                if 'behavior_record' not in data.non_tensor_batch:
+                    raise ValueError('Missing scored behavior records before selection monitoring')
+                return data.non_tensor_batch['behavior_record'].tolist()
+            report = summarize_scopes([row for data in batches for row in records(data)], records(merged))
+            report['stratified_draws'] = draws
+            metrics.update(flatten(report))
+            self._pending_behavior_report = report
+        return merged, metrics
+
+    def _balance_batch(self, batch, metrics, logging_prefix='global_seqlen'):
+        from search_r1.dynamic_sampling.engineering import partition_summary, add_partition_metrics
+        world = self.actor_rollout_wg.world_size
+        before = partition_summary(batch.batch['attention_mask'].sum(-1).tolist(), world)
+        enabled = self.config.get('engineering', {}).get('sequence_balancing', True)
+        if enabled:
+            super()._balance_batch(batch, metrics, logging_prefix)
+        after = partition_summary(batch.batch['attention_mask'].sum(-1).tolist(), world)
+        add_partition_metrics(metrics, before, after)
+        batch.meta_info['engineering_balanced'] = bool(enabled)
 
     def _fit_sampling(self):
+        options = self.config.get('engineering', {})
+        if options.get('profile_only', False) and options.get('workload_path'):
+            from search_r1.dynamic_sampling.engineering import benchmark_updates
+            # Only load this project's own, trusted local benchmark artifact.
+            batch = DataProto.load_from_disk(options.workload_path)
+            self.actor_rollout_wg.prepare_engineering_replay()
+            self.global_steps = 1
+            benchmark_updates(self, batch, {'engineering/reused_workload': 1})
+            return
         if self.config.trainer.get('val_only', False):
             self.logger.log(self._validate(), step=0)
             return
@@ -125,7 +217,8 @@ class DynamicSamplingTrainer(RayPPOTrainer):
             num_gpus=self.config.trainer.n_gpus_per_node * self.config.trainer.nnodes,
             no_think_rl=self.config.algorithm.no_think_rl,
             search_url=self.config.retriever.url, topk=self.config.retriever.topk,
-            search_timeout=self.config.retriever.get('timeout', 30.))
+            search_timeout=self.config.retriever.get('timeout', 30.),
+            retrieval_runtime=runtime_options(self.config))
         manager = LLMGenerationManager(self.tokenizer, self.actor_rollout_wg, gen_config)
         # Preserve this repository's historical stopping convention: total=625
         # means updates 1..624, followed by validation labeled 625.
@@ -133,7 +226,8 @@ class DynamicSamplingTrainer(RayPPOTrainer):
             self.global_steps = step
             started = time.perf_counter()
             batch, metrics = self._collect(manager, step)
-            self._balance_batch(batch, metrics=metrics)
+            if not self.config.get('engineering', {}).get('profile_only', False):
+                self._balance_batch(batch, metrics=metrics)
             batch.meta_info['global_token_num'] = batch.batch['attention_mask'].sum(-1).tolist()
             tick = time.perf_counter()
             old = self.actor_rollout_wg.compute_log_prob(batch)
@@ -161,6 +255,10 @@ class DynamicSamplingTrainer(RayPPOTrainer):
             if 'ref_log_prob' in batch.batch and not torch.isfinite(batch.batch['ref_log_prob']).all():
                 raise FloatingPointError('Reference log probabilities are nonfinite')
             batch, metrics = self._create_loss_mask(batch, metrics)
+            if self.config.get('engineering', {}).get('profile_only', False):
+                from search_r1.dynamic_sampling.engineering import benchmark_updates
+                benchmark_updates(self, batch, metrics)
+                return
             tick = time.perf_counter()
             output = self.actor_rollout_wg.update_actor(batch)
             actor_metrics = reduce_metrics(output.meta_info['metrics'])
@@ -168,6 +266,11 @@ class DynamicSamplingTrainer(RayPPOTrainer):
                 raise FloatingPointError('Nonfinite actor metric returned')
             metrics.update(actor_metrics)
             metrics['timing_s/update_actor'] = time.perf_counter()-tick
+            behavior_alerts = []
+            monitor = getattr(self, '_behavior_monitor', None)
+            if monitor is not None and self._pending_behavior_report is not None:
+                health, behavior_alerts = monitor.record(step, self._pending_behavior_report)
+                metrics.update(health)
             if self.val_reward_fn is not None and self.config.trainer.test_freq > 0 and step % self.config.trainer.test_freq == 0:
                 metrics.update(self._validate())
             if self.config.trainer.save_freq > 0 and step % self.config.trainer.save_freq == 0:
@@ -176,6 +279,8 @@ class DynamicSamplingTrainer(RayPPOTrainer):
             metrics['timing_s/step'] = time.perf_counter()-started
             self.logger.log(metrics, step=step)
             self._append('completed_updates.jsonl', dict(global_step=step, metrics=metrics))
+            if behavior_alerts and monitor.stop_on_alert:
+                raise RuntimeError('Behavior monitor stopped after completed update: '+','.join(behavior_alerts))
         self.global_steps = int(self.total_training_steps)
         if self.val_reward_fn is not None and not self.config.trainer.get('skip_final_validation', False):
             self.logger.log(self._validate(), step=self.global_steps)

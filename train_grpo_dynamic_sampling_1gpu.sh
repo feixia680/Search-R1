@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-# Bounded dynamic-sampling GRPO (isolated entrypoint). Same command layout as train_grpo_1gpu.sh.
-# --print-config previews Hydra settings without GPU use or training.
+# Bounded dynamic-sampling.
 set -eo pipefail
-cd /g22538014wej/11x22f/Search-R1
-source /opt/conda/etc/profile.d/conda.sh
-conda activate "${CONDA_ENV:-/g22538014wej/11x22f/envs/search1}"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts/search_environment.sh"
 BASE_ROOT=${BASE_ROOT:-$PWD}
 export PROJECT_CACHE_DIR="$BASE_ROOT/data/cache"
 export HF_HOME="$PROJECT_CACHE_DIR/huggingface"
@@ -29,6 +26,9 @@ EVIDENCE_ALPHA=${EVIDENCE_ALPHA:-0.1}
 TRAIN_SEED=${TRAIN_SEED:-42}
 SAMPLING_ENABLED=${SAMPLING_ENABLED:-true}
 MAX_CANDIDATE_BATCHES=${MAX_CANDIDATE_BATCHES:-3}
+BEHAVIOR_SAMPLING_ENABLED=${BEHAVIOR_SAMPLING_ENABLED:-true}
+BEHAVIOR_MONITOR_ENABLED=${BEHAVIOR_MONITOR_ENABLED:-true}
+BEHAVIOR_STRATA_PATH=${BEHAVIOR_STRATA_PATH:-$DATA_DIR/behavior_strata.json}
 RETRIEVER_URL=${RETRIEVER_URL:-http://127.0.0.1:8000/retrieve}
 RUN_DIR=${RUN_DIR:-$PWD/algorithm_a_runs/dynamic_sampling_1gpu_a${EVIDENCE_ALPHA}_s${TRAIN_SEED}_$(date +%Y%m%d_%H%M%S)}
 
@@ -52,9 +52,10 @@ else
     ln -s "$RAY_TMPDIR" "$RUN_DIR/ray_runtime"
     cp "${BASH_SOURCE[0]}" "$RUN_DIR/launcher.sh"
     cp "$DATA_DIR/annotation_audit.json" "$RUN_DIR/annotation_audit.json"
+    if [[ -f "$BEHAVIOR_STRATA_PATH" ]]; then cp "$BEHAVIOR_STRATA_PATH" "$RUN_DIR/behavior_strata.json"; fi
     git rev-parse HEAD > "$RUN_DIR/base_commit.txt"
     git diff --stat > "$RUN_DIR/source_diff_stat.txt"
-    for f in search_r1/dynamic_sampling/*.py verl/trainer/ppo/dynamic_sampling_trainer.py verl/trainer/main_dynamic_sampling.py verl/workers/dynamic_sampling_worker.py verl/workers/actor/dynamic_sampling_actor.py verl/trainer/config/dynamic_sampling.yaml verl/trainer/main_ppo.py verl/trainer/ppo/ray_trainer.py verl/trainer/ppo/core_algos.py verl/workers/actor/dp_actor.py search_r1/llm_agent/{generation,trajectory,evidence,visibility}.py; do
+    for f in evaluation/benchmark_retrieval_runtime.py city_dynamic_2gpu_fast.sh run_engineering_benchmark_2gpu.sh evaluation/build_behavior_strata.py evaluation/check_behavior_inputs.py scripts/search_environment.sh scripts/run_dynamic_sampling.sh evaluation/manage_dynamic_sampling_launch.py start_bm25_local.sh render_mc_aerial_c36_argmax.sh verl/single_controller/ray/base.py search_r1/search/retrieval_client.py search_r1/dynamic_sampling/*.py verl/trainer/ppo/dynamic_sampling_trainer.py verl/trainer/main_dynamic_sampling.py verl/workers/dynamic_sampling_worker.py verl/workers/actor/dynamic_sampling_actor.py verl/trainer/config/dynamic_sampling.yaml verl/trainer/main_ppo.py verl/trainer/ppo/ray_trainer.py verl/trainer/ppo/core_algos.py verl/workers/actor/dp_actor.py search_r1/llm_agent/{generation,trajectory,evidence,visibility}.py; do
         mkdir -p "$RUN_DIR/source/$(dirname "$f")"
         cp "$f" "$RUN_DIR/source/$f"
     done
@@ -119,6 +120,9 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_dynamic_sampling \
     retriever.topk=3 \
     "dynamic_sampling.enabled=$SAMPLING_ENABLED" \
     "dynamic_sampling.max_candidate_batches=$MAX_CANDIDATE_BATCHES" \
+    "behavior_sampling.enabled=$BEHAVIOR_SAMPLING_ENABLED" \
+    "behavior_sampling.manifest_path=$BEHAVIOR_STRATA_PATH" \
+    "behavior_monitor.enabled=$BEHAVIOR_MONITOR_ENABLED" \
     "search_reward.alpha=$EVIDENCE_ALPHA" \
     search_reward.beta=0.0 \
     search_reward.gamma=0.0 \

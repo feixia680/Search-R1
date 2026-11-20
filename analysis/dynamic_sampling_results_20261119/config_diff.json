@@ -1,0 +1,62 @@
+[
+  {
+    "field": "actor_rollout_ref.model.path",
+    "dynamic": "/g22538014wej/cityins1122/cityins/models/Qwen2.5-3B",
+    "evidence": "/g22538014wej/11x22f/Search-R1/models/Qwen2.5-3B"
+  },
+  {
+    "field": "data.train_files",
+    "dynamic": "/g22538014wej/cityins1122/cityins/algorithm_a_data/evidence/train.parquet",
+    "evidence": "/g22538014wej/11x22f/Search-R1/algorithm_a_data/evidence/train.parquet"
+  },
+  {
+    "field": "data.val_files",
+    "dynamic": "/g22538014wej/cityins1122/cityins/algorithm_a_data/evidence/test.parquet",
+    "evidence": "/g22538014wej/11x22f/Search-R1/algorithm_a_data/evidence/test.parquet"
+  },
+  {
+    "field": "dynamic_sampling.audit_dir",
+    "dynamic": "${trainer.default_local_dir}/../sampling",
+    "evidence": null
+  },
+  {
+    "field": "dynamic_sampling.enabled",
+    "dynamic": true,
+    "evidence": null
+  },
+  {
+    "field": "dynamic_sampling.max_candidate_batches",
+    "dynamic": 3,
+    "evidence": null
+  },
+  {
+    "field": "dynamic_sampling.reward_range_epsilon",
+    "dynamic": 1e-08,
+    "evidence": null
+  },
+  {
+    "field": "search_reward.after_full_lambda",
+    "dynamic": 0.0,
+    "evidence": null
+  },
+  {
+    "field": "search_reward.trace_dir",
+    "dynamic": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/dynamic_sampling_1gpu_a0.1_s42_20261118_085420/traces",
+    "evidence": "/g22538014wej/11x22f/Search-R1/algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/traces"
+  },
+  {
+    "field": "trainer.default_local_dir",
+    "dynamic": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/dynamic_sampling_1gpu_a0.1_s42_20261118_085420/checkpoints",
+    "evidence": "/g22538014wej/11x22f/Search-R1/algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/checkpoints"
+  },
+  {
+    "field": "trainer.experiment_name",
+    "dynamic": "hotpotqa-qwen25-3b-grpo-dynamic-sampling-1gpu",
+    "evidence": "hotpotqa-qwen25-3b-grpo-evidence-2gpu"
+  },
+  {
+    "field": "trainer.n_gpus_per_node",
+    "dynamic": 1,
+    "evidence": 2
+  }
+]

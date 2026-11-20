@@ -1,0 +1,60 @@
+{
+  "training_records": 624,
+  "first_update": 1,
+  "last_update": 624,
+  "validation": [
+    {
+      "step": 125,
+      "em": 0.125
+    },
+    {
+      "step": 250,
+      "em": 0.215
+    },
+    {
+      "step": 375,
+      "em": 0.24
+    },
+    {
+      "step": 500,
+      "em": 0.235
+    },
+    {
+      "step": 625,
+      "em": 0.255
+    }
+  ],
+  "windows": {
+    "first100": {
+      "critic/score/mean": 0.07423000000000002,
+      "actor/kl_loss": 0.0014700000000000002,
+      "actor/entropy_loss": 1.21062,
+      "actor/grad_norm": 1.4843899999999999,
+      "env/finish_ratio": 0.47131,
+      "env/ratio_of_valid_action": 0.60939,
+      "env/number_of_valid_search": 0.84119,
+      "response_length/mean": 603.8762399999999,
+      "timing_s/gen": 26.735460000000003,
+      "timing_s/update_actor": 5.36971
+    },
+    "last100": {
+      "critic/score/mean": 0.40364999999999995,
+      "actor/kl_loss": 0.30224999999999996,
+      "actor/entropy_loss": 0.50837,
+      "actor/grad_norm": 4.01115,
+      "env/finish_ratio": 0.9688900000000001,
+      "env/ratio_of_valid_action": 0.9848399999999999,
+      "env/number_of_valid_search": 1.02679,
+      "response_length/mean": 469.02317000000005,
+      "timing_s/gen": 17.468110000000003,
+      "timing_s/update_actor": 5.20679
+    }
+  },
+  "nonfinite_values": [],
+  "zero_advantage_batches": 154,
+  "zero_advantage_last100": 35,
+  "logged_training_wall_hours": 5.246937777777778,
+  "max_grad_norm": 232.522,
+  "lr_logging_precision_note": "console rounds LR to three decimals; zero in CSV is not evidence of zero actual learning rate",
+  "final_checkpoint_note": "fit increments global_steps before >= total_training_steps check, so updates 1..624 are logged, final evaluation labeled625; no final save"
+}

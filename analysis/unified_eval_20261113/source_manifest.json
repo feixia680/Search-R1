@@ -1,0 +1,47 @@
+{
+  "files": {
+    "analysis/unified_eval_20261113/evaluate.py": "26957d8eeaf5be292e4d3fd8a50ff18aba02ca41ed419b3c84b6445539abe4ee",
+    "analysis/unified_eval_20261113/summarize.py": "d6fb66b7a0c42625cb521ae059adeca963953d9a350d6d02a3480207dfbaa60b",
+    "analysis/unified_eval_20261113/run.sh": "b0390cddb24ad09fd03707397b92baa294cc52646155c45fabf186c9bc4ae2ae",
+    "analysis/unified_eval_20261113/manifest.json": "40039cba279090a38fd833e4986852161fa2b5f306eb59cfab5b9fc1e89913dd",
+    "search_r1/llm_agent/generation.py": "abf377ffe8d7fb5ec72c0d5e79a275d863f9a0bd62b57d32c7510cf18328cf55",
+    "search_r1/llm_agent/evidence.py": "64e769d586577a3ea31319af197781f5ae59a50f2823f49bd250a1e459bcd999",
+    "search_r1/llm_agent/visibility.py": "bfad749fa457893d4e88a8e303196f3384df1ddbb157ede783a3e47623f2b1c2"
+  },
+  "models": {
+    "baseline": {
+      "path": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_500",
+      "files": {
+        "config.json": 776,
+        "vocab.json": 2776833,
+        "tokenizer_config.json": 7259,
+        "model-00001-of-00003.safetensors": 4982131536,
+        "model.safetensors.index.json": 35640,
+        "special_tokens_map.json": 616,
+        "added_tokens.json": 605,
+        "model-00003-of-00003.safetensors": 3673383040,
+        "tokenizer.json": 11421896,
+        "generation_config.json": 117,
+        "merges.txt": 1671853,
+        "model-00002-of-00003.safetensors": 4932949336
+      }
+    },
+    "evidence": {
+      "path": "/g22538014wej/11x22f/Search-R1/algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/checkpoints/actor/global_step_500",
+      "files": {
+        "config.json": 776,
+        "vocab.json": 2776833,
+        "tokenizer_config.json": 7259,
+        "model-00001-of-00003.safetensors": 4982131536,
+        "model.safetensors.index.json": 35640,
+        "special_tokens_map.json": 616,
+        "added_tokens.json": 605,
+        "model-00003-of-00003.safetensors": 3673383040,
+        "tokenizer.json": 11421896,
+        "generation_config.json": 117,
+        "merges.txt": 1671853,
+        "model-00002-of-00003.safetensors": 4932949336
+      }
+    }
+  }
+}

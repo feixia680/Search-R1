@@ -14,7 +14,7 @@ WAND_PROJECT='Search-R1'
 # export BASE_MODEL='meta-llama/Llama-3.1-8B-Instruct'
 # export EXPERIMENT_NAME=nq-search-r1-grpo-llama3.1-8b-it-em
 
-export BASE_MODEL='/g22538014wej/11x22f/Search-R1/models/Qwen2.5-3B'
+export BASE_MODEL='/g22538014wej/cityins1122/cityins/models/Qwen2.5-3B'
 export EXPERIMENT_NAME=hotpotqa-qwen25-3b-grpo-smoke-1gpu
 # export BASE_MODEL='Qwen/Qwen2.5-3B-Instruct'
 # export EXPERIMENT_NAME=nq-search-r1-grpo-qwen2.5-3b-it-em

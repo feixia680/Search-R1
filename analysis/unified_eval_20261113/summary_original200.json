@@ -1,0 +1,283 @@
+{
+  "rows": [
+    {
+      "model": "baseline",
+      "policy": "fixed_one",
+      "cohort": "original200",
+      "n": 200,
+      "correct": 52,
+      "em": 0.26,
+      "final_answer_em": 0.26,
+      "mean_calls": 1.0,
+      "calls_hist": {
+        "1": 200
+      },
+      "coverage": 0.6009166666666667,
+      "full_evidence": 56,
+      "second_calls": 0,
+      "second_new_evidence": 0,
+      "second_zero_evidence": 0,
+      "second_after_full": 0,
+      "mean_second_gain": 0.0,
+      "mean_observation_tokens": 439.585,
+      "missing_final": 0,
+      "invalid_actions": 0,
+      "duplicate_queries": 0,
+      "duplicate_trajectory_count": 0,
+      "missing_final_rate": 0.0,
+      "retrieval_failures": 0
+    },
+    {
+      "model": "baseline",
+      "policy": "fixed_two",
+      "cohort": "original200",
+      "n": 200,
+      "correct": 58,
+      "em": 0.29,
+      "final_answer_em": 0.29,
+      "mean_calls": 2.0,
+      "calls_hist": {
+        "2": 200
+      },
+      "coverage": 0.6434166666666666,
+      "full_evidence": 72,
+      "second_calls": 200,
+      "second_new_evidence": 17,
+      "second_zero_evidence": 183,
+      "second_after_full": 56,
+      "mean_second_gain": 0.0425,
+      "mean_observation_tokens": 884.74,
+      "missing_final": 0,
+      "invalid_actions": 0,
+      "duplicate_queries": 131,
+      "duplicate_trajectory_count": 131,
+      "missing_final_rate": 0.0,
+      "retrieval_failures": 0
+    },
+    {
+      "model": "baseline",
+      "policy": "autonomous",
+      "cohort": "original200",
+      "n": 200,
+      "correct": 54,
+      "em": 0.27,
+      "final_answer_em": 0.27,
+      "mean_calls": 1.0,
+      "calls_hist": {
+        "1": 200
+      },
+      "coverage": 0.59175,
+      "full_evidence": 53,
+      "second_calls": 0,
+      "second_new_evidence": 0,
+      "second_zero_evidence": 0,
+      "second_after_full": 0,
+      "mean_second_gain": 0.0,
+      "mean_observation_tokens": 436.075,
+      "missing_final": 0,
+      "invalid_actions": 0,
+      "duplicate_queries": 0,
+      "duplicate_trajectory_count": 0,
+      "missing_final_rate": 0.0,
+      "retrieval_failures": 0
+    },
+    {
+      "model": "evidence",
+      "policy": "fixed_one",
+      "cohort": "original200",
+      "n": 200,
+      "correct": 46,
+      "em": 0.23,
+      "final_answer_em": 0.23,
+      "mean_calls": 1.0,
+      "calls_hist": {
+        "1": 200
+      },
+      "coverage": 0.5529166666666666,
+      "full_evidence": 40,
+      "second_calls": 0,
+      "second_new_evidence": 0,
+      "second_zero_evidence": 0,
+      "second_after_full": 0,
+      "mean_second_gain": 0.0,
+      "mean_observation_tokens": 428.295,
+      "missing_final": 0,
+      "invalid_actions": 0,
+      "duplicate_queries": 0,
+      "duplicate_trajectory_count": 0,
+      "missing_final_rate": 0.0,
+      "retrieval_failures": 0
+    },
+    {
+      "model": "evidence",
+      "policy": "fixed_two",
+      "cohort": "original200",
+      "n": 200,
+      "correct": 60,
+      "em": 0.3,
+      "final_answer_em": 0.3,
+      "mean_calls": 2.0,
+      "calls_hist": {
+        "2": 200
+      },
+      "coverage": 0.7699166666666666,
+      "full_evidence": 119,
+      "second_calls": 200,
+      "second_new_evidence": 85,
+      "second_zero_evidence": 115,
+      "second_after_full": 40,
+      "mean_second_gain": 0.217,
+      "mean_observation_tokens": 862.055,
+      "missing_final": 0,
+      "invalid_actions": 0,
+      "duplicate_queries": 9,
+      "duplicate_trajectory_count": 9,
+      "missing_final_rate": 0.0,
+      "retrieval_failures": 0
+    },
+    {
+      "model": "evidence",
+      "policy": "autonomous",
+      "cohort": "original200",
+      "n": 200,
+      "correct": 79,
+      "em": 0.395,
+      "final_answer_em": 0.395,
+      "mean_calls": 1.925,
+      "calls_hist": {
+        "2": 185,
+        "1": 15
+      },
+      "coverage": 0.7842500000000001,
+      "full_evidence": 126,
+      "second_calls": 185,
+      "second_new_evidence": 104,
+      "second_zero_evidence": 81,
+      "second_after_full": 24,
+      "mean_second_gain": 0.26291666666666674,
+      "mean_observation_tokens": 822.53,
+      "missing_final": 16,
+      "invalid_actions": 2,
+      "duplicate_queries": 3,
+      "duplicate_trajectory_count": 3,
+      "missing_final_rate": 0.08,
+      "retrieval_failures": 0
+    }
+  ],
+  "between_models": {
+    "original200/fixed_one": {
+      "n": 200,
+      "em_delta": -0.03,
+      "relative_em_improvement": -0.11538461538461538,
+      "paired_bootstrap_95ci": [
+        -0.08,
+        0.015
+      ],
+      "wrong_to_right": 9,
+      "right_to_wrong": 15,
+      "exact_mcnemar_p": 0.30745625495910645,
+      "mean_calls_delta": 0.0,
+      "mean_coverage_delta": -0.04800000000000001
+    },
+    "original200/fixed_two": {
+      "n": 200,
+      "em_delta": 0.01,
+      "relative_em_improvement": 0.03448275862068966,
+      "paired_bootstrap_95ci": [
+        -0.05,
+        0.065
+      ],
+      "wrong_to_right": 18,
+      "right_to_wrong": 16,
+      "exact_mcnemar_p": 0.8641662404406816,
+      "mean_calls_delta": 0.0,
+      "mean_coverage_delta": 0.1265
+    },
+    "original200/autonomous": {
+      "n": 200,
+      "em_delta": 0.125,
+      "relative_em_improvement": 0.4629629629629629,
+      "paired_bootstrap_95ci": [
+        0.06,
+        0.195
+      ],
+      "wrong_to_right": 37,
+      "right_to_wrong": 12,
+      "exact_mcnemar_p": 0.0004697573180081349,
+      "mean_calls_delta": 0.925,
+      "mean_coverage_delta": 0.1925
+    }
+  },
+  "within_model": {
+    "original200/baseline/fixed_two_minus_one": {
+      "n": 200,
+      "em_delta": 0.03,
+      "relative_em_improvement": 0.11538461538461538,
+      "paired_bootstrap_95ci": [
+        -0.01,
+        0.07
+      ],
+      "wrong_to_right": 11,
+      "right_to_wrong": 5,
+      "exact_mcnemar_p": 0.210113525390625,
+      "mean_calls_delta": 1.0,
+      "mean_coverage_delta": 0.0425,
+      "second_adds_evidence_corrected_answer": 6.0
+    },
+    "original200/evidence/fixed_two_minus_one": {
+      "n": 200,
+      "em_delta": 0.07,
+      "relative_em_improvement": 0.30434782608695654,
+      "paired_bootstrap_95ci": [
+        0.02,
+        0.125
+      ],
+      "wrong_to_right": 22,
+      "right_to_wrong": 8,
+      "exact_mcnemar_p": 0.016124801710247993,
+      "mean_calls_delta": 1.0,
+      "mean_coverage_delta": 0.21700000000000003,
+      "second_adds_evidence_corrected_answer": 17.0
+    }
+  },
+  "fixed_first_query_and_observation_identical": true,
+  "primary_comparison": "original200/autonomous (reused validation subset)",
+  "protocol": {
+    "seed": 42,
+    "heldout_sampling_seed": 20261113,
+    "original_n": 200,
+    "heldout_n": 500,
+    "heldout_excludes_old_questions": true,
+    "heldout_excludes_exact_normalized_training_questions": true,
+    "heldout_requires_valid_annotation": true,
+    "heldout_previously_selected_checkpoints": false,
+    "batch_size": 16,
+    "greedy": true,
+    "topk": 3,
+    "max_turns": 2,
+    "max_start_length": 512,
+    "max_prompt_length": 2816,
+    "max_response_length": 256,
+    "max_obs_length": 1024,
+    "native_policy": "autonomous",
+    "forced_policies": [
+      "fixed_one",
+      "fixed_two"
+    ],
+    "forced_prefixes": true,
+    "forced_first_query_shared_between_fixed_policies": true,
+    "confidence_threshold_policy": false,
+    "gold_labels_used_for_decisions": false,
+    "forced_action_content_sanitization": "trim at first <; empty query falls back to question; close action tag enforced",
+    "timing_claims": false,
+    "training": false
+  },
+  "caveats": [
+    "One training seed per method; old baseline shuffle seed not recorded.",
+    "Forced policies enforce action prefixes and closing tags. Autonomous uses native actions; protocol differs.",
+    "Forced fixed policies share first-hop query tokens. No wall-clock latency claim.",
+    "Full gold support coverage is not proof that the answer is correct.",
+    "The original 200 questions were used for validation/checkpoint selection; these results are a controlled replay, not a heldout test.",
+    "Paired question bootstrap measures evaluation-sample uncertainty, not training-seed variability. Secondary p-values are uncorrected for multiple comparisons."
+  ]
+}

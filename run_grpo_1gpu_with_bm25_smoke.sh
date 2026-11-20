@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
-cd /g22538014wej/11x22f/Search-R1
+cd /g22538014wej/cityins1122/cityins
 source /opt/conda/etc/profile.d/conda.sh
-conda activate /g22538014wej/11x22f/envs/search1
+conda activate /g22538014wej/cityins1122/envs/search1
 mkdir -p logs
 retriever_pid=""
 cleanup() {

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "policy_prompts_changed": false,
+  "splits": {
+    "train": {
+      "original_count": 5000,
+      "eligible_count": 4998,
+      "evidence_ineligible_count": 2,
+      "evidence_ineligible": [
+        {
+          "position": 42,
+          "sample_index": 42,
+          "raw_id": "5abee5e25542994516f45473",
+          "status": "invalid_annotation",
+          "errors": [
+            "duplicate_context_title:Cover Version"
+          ]
+        },
+        {
+          "position": 514,
+          "sample_index": 514,
+          "raw_id": "5a7b23ca554299042af8f703",
+          "status": "invalid_annotation",
+          "errors": [
+            "missing_sentence:Minoru Suzuki:2"
+          ]
+        }
+      ],
+      "primary_output_count": 5000,
+      "primary_output_preserves_original_sample_order": true,
+      "supporting_fact_count": 11978,
+      "processed_sha256": "5a3bcba13763a279b06b00a4491174f5e75eb8d29daa0adcf42a3c3a98bab883",
+      "raw_sha256": "6609a40545e8d44ddf35341ddf3374d3886316d7add67824f665a6e0a2651ad9",
+      "output_sha256": "cdeacb2faef17630fd4c40785e92ad39e0d389add868ed72136ed6ee9c8b5c75"
+    },
+    "test": {
+      "original_count": 5000,
+      "eligible_count": 4997,
+      "evidence_ineligible_count": 3,
+      "evidence_ineligible": [
+        {
+          "position": 754,
+          "sample_index": 754,
+          "raw_id": "5a8ec7cc5542995a26add518",
+          "status": "invalid_annotation",
+          "errors": [
+            "duplicate_context_title:Popular science"
+          ]
+        },
+        {
+          "position": 877,
+          "sample_index": 877,
+          "raw_id": "5a77c60255429967ab105285",
+          "status": "invalid_annotation",
+          "errors": [
+            "duplicate_context_title:Illusion Optics"
+          ]
+        },
+        {
+          "position": 1622,
+          "sample_index": 1622,
+          "raw_id": "5a7a36e65542990198eaf0ea",
+          "status": "invalid_annotation",
+          "errors": [
+            "duplicate_context_title:Bully Boy"
+          ]
+        }
+      ],
+      "primary_output_count": 5000,
+      "primary_output_preserves_original_sample_order": true,
+      "supporting_fact_count": 12153,
+      "processed_sha256": "f74710ea34945d1a8d812249a609564f362fc776b2d7c104df1180a9e1bb4360",
+      "raw_sha256": "2fc7bb5fa6e65fe5c586b8f6fe0e04bd5dad1bf5bdc9ccd2c701a67fb70787d6",
+      "output_sha256": "29a1225cd6e98ba5e11f61df5e0bdc674df8380098f10f739dfd72648fa4d6c7"
+    }
+  }
+}

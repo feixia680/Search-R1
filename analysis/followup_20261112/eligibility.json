@@ -1,0 +1,8 @@
+{
+  "original": 5000,
+  "eligible": 4999,
+  "excluded_indices": [
+    514
+  ],
+  "reason": "supporting fact sentence index absent from raw context"
+}

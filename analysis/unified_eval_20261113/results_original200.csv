@@ -1,0 +1,7 @@
+model,policy,cohort,n,correct,em,final_answer_em,mean_calls,calls_hist,coverage,full_evidence,second_calls,second_new_evidence,second_zero_evidence,second_after_full,mean_second_gain,mean_observation_tokens,missing_final,invalid_actions,duplicate_queries,duplicate_trajectory_count,missing_final_rate,retrieval_failures
+baseline,fixed_one,original200,200,52,0.26,0.26,1.0,{1: 200},0.6009166666666667,56,0,0,0,0,0.0,439.585,0,0,0,0,0.0,0
+baseline,fixed_two,original200,200,58,0.29,0.29,2.0,{2: 200},0.6434166666666666,72,200,17,183,56,0.0425,884.74,0,0,131,131,0.0,0
+baseline,autonomous,original200,200,54,0.27,0.27,1.0,{1: 200},0.59175,53,0,0,0,0,0.0,436.075,0,0,0,0,0.0,0
+evidence,fixed_one,original200,200,46,0.23,0.23,1.0,{1: 200},0.5529166666666666,40,0,0,0,0,0.0,428.295,0,0,0,0,0.0,0
+evidence,fixed_two,original200,200,60,0.3,0.3,2.0,{2: 200},0.7699166666666666,119,200,85,115,40,0.217,862.055,0,0,9,9,0.0,0
+evidence,autonomous,original200,200,79,0.395,0.395,1.925,"{2: 185, 1: 15}",0.7842500000000001,126,185,104,81,24,0.26291666666666674,822.53,16,2,3,3,0.08,0

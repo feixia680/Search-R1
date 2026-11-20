@@ -1,0 +1,7 @@
+{
+  "model": "/g22538014wej/11x22f/Search-R1/algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/checkpoints/actor/global_step_500",
+  "label": "evidence",
+  "n": 700,
+  "policies": 3,
+  "empty_query_fallbacks": 0
+}

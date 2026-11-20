@@ -1,0 +1,136 @@
+{
+  "models": [
+    {
+      "label": "base",
+      "n": 200,
+      "correct": 21.0,
+      "em": 0.105,
+      "action_correct": 21,
+      "mean_search": 0.715,
+      "missing_final": 63,
+      "seconds": 214.40703332424164,
+      "model": "/g22538014wej/11x22f/Search-R1/models/Qwen2.5-3B",
+      "settings": {
+        "backend": "vllm",
+        "dtype": "bfloat16",
+        "batch_size": 8,
+        "seed": 42,
+        "greedy": true,
+        "max_turns": 2,
+        "max_response_length": 256,
+        "max_start_length": 512,
+        "max_prompt_length": 2816,
+        "max_obs_length": 1024,
+        "topk": 3,
+        "dataset_sample_seed": 42
+      },
+      "wilson95": [
+        0.06970748792681097,
+        0.15518031991122883
+      ],
+      "legacy_action_em_mismatches": 0
+    },
+    {
+      "label": "step375",
+      "n": 200,
+      "correct": 46.0,
+      "em": 0.23,
+      "action_correct": 46,
+      "mean_search": 1.0,
+      "missing_final": 0,
+      "seconds": 43.058511439710855,
+      "model": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_375",
+      "settings": {
+        "backend": "vllm",
+        "dtype": "bfloat16",
+        "batch_size": 8,
+        "seed": 42,
+        "greedy": true,
+        "max_turns": 2,
+        "max_response_length": 256,
+        "max_start_length": 512,
+        "max_prompt_length": 2816,
+        "max_obs_length": 1024,
+        "topk": 3,
+        "dataset_sample_seed": 42
+      },
+      "wilson95": [
+        0.17709343259068935,
+        0.29308304365303406
+      ],
+      "legacy_action_em_mismatches": 0
+    },
+    {
+      "label": "step500",
+      "n": 200,
+      "correct": 53.0,
+      "em": 0.265,
+      "action_correct": 53,
+      "mean_search": 1.0,
+      "missing_final": 0,
+      "seconds": 37.89628851599991,
+      "model": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_500",
+      "settings": {
+        "backend": "vllm",
+        "dtype": "bfloat16",
+        "batch_size": 8,
+        "seed": 42,
+        "greedy": true,
+        "max_turns": 2,
+        "max_response_length": 256,
+        "max_start_length": 512,
+        "max_prompt_length": 2816,
+        "max_obs_length": 1024,
+        "topk": 3,
+        "dataset_sample_seed": 42
+      },
+      "wilson95": [
+        0.20868154147109252,
+        0.33017576192622233
+      ],
+      "legacy_action_em_mismatches": 0
+    }
+  ],
+  "paired": {
+    "base_vs_step375": {
+      "delta_pp": 12.5,
+      "relative_gain": 1.1904761904761907,
+      "wrong_to_right": 33,
+      "right_to_wrong": 8,
+      "both_right": 13,
+      "both_wrong": 146,
+      "paired_bootstrap95_pp": [
+        6.5,
+        18.5
+      ],
+      "mcnemar_exact_p": 0.00011222142620681552
+    },
+    "base_vs_step500": {
+      "delta_pp": 16.0,
+      "relative_gain": 1.5238095238095242,
+      "wrong_to_right": 38,
+      "right_to_wrong": 6,
+      "both_right": 15,
+      "both_wrong": 141,
+      "paired_bootstrap95_pp": [
+        10.0,
+        22.0
+      ],
+      "mcnemar_exact_p": 9.430375484953402e-07
+    },
+    "step375_vs_step500": {
+      "delta_pp": 3.5000000000000004,
+      "relative_gain": 0.15217391304347827,
+      "wrong_to_right": 15,
+      "right_to_wrong": 8,
+      "both_right": 38,
+      "both_wrong": 139,
+      "paired_bootstrap95_pp": [
+        -1.0,
+        8.0
+      ],
+      "mcnemar_exact_p": 0.21003961563110352
+    }
+  },
+  "scope": "200 same validation questions used during training; exploratory one-seed evaluation, not a new independent test set; one GPU for re-evaluation vs two GPUs in historical run"
+}

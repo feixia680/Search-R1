@@ -1,0 +1,246 @@
+{
+  "hardware": "2 x NVIDIA A800-SXM4-80GB",
+  "model": "Qwen2.5-3B",
+  "workload_samples": 16,
+  "workload_tokens": 11749,
+  "input_workload_sha256": "6a6c832333b27788e6bfe48762553dad3a4811569ac80c3ca06931c7272a3ca2",
+  "full_workload_sha256": "d11a592725029535a7a0de0d8f6cf2b8c82b975043da02022ecd04eef2ed6111",
+  "identical_all_tensors_and_metadata": true,
+  "measurements": [
+    {
+      "mode": "offload",
+      "variant": "unbalanced_m2",
+      "median_seconds": 5.308559803990647,
+      "min_seconds": 5.292584813025314,
+      "max_seconds": 5.30937692601583,
+      "peak_allocated_gib": 29.52054500579834,
+      "peak_reserved_gib": 36.36328125
+    },
+    {
+      "mode": "offload",
+      "variant": "balanced_m2",
+      "median_seconds": 5.727787521987921,
+      "min_seconds": 5.265445422002813,
+      "max_seconds": 5.762509920983575,
+      "peak_allocated_gib": 29.52054500579834,
+      "peak_reserved_gib": 35.95703125
+    },
+    {
+      "mode": "offload",
+      "variant": "balanced_m4",
+      "median_seconds": 4.895071416016435,
+      "min_seconds": 4.530960784002673,
+      "max_seconds": 5.313322229019832,
+      "peak_allocated_gib": 29.520576000213623,
+      "peak_reserved_gib": 37.158203125
+    },
+    {
+      "mode": "offload",
+      "variant": "balanced_m8",
+      "median_seconds": 4.058977784996387,
+      "min_seconds": 3.9868289540172555,
+      "max_seconds": 4.2268987230199855,
+      "peak_allocated_gib": 29.5206036567688,
+      "peak_reserved_gib": 37.521484375
+    },
+    {
+      "mode": "resident",
+      "variant": "unbalanced_m2",
+      "median_seconds": 3.2210008749971166,
+      "min_seconds": 3.1342895469861105,
+      "max_seconds": 3.2692886239965446,
+      "peak_allocated_gib": 31.818790435791016,
+      "peak_reserved_gib": 37.90625
+    },
+    {
+      "mode": "resident",
+      "variant": "balanced_m2",
+      "median_seconds": 2.9020613320171833,
+      "min_seconds": 2.8982921720016748,
+      "max_seconds": 3.5110062349995133,
+      "peak_allocated_gib": 31.81493377685547,
+      "peak_reserved_gib": 37.017578125
+    },
+    {
+      "mode": "resident",
+      "variant": "balanced_m4",
+      "median_seconds": 2.127265196002554,
+      "min_seconds": 2.1238315099908505,
+      "max_seconds": 2.2937190770171583,
+      "peak_allocated_gib": 31.80917978286743,
+      "peak_reserved_gib": 37.53515625
+    },
+    {
+      "mode": "resident",
+      "variant": "balanced_m8",
+      "median_seconds": 1.6349985470005777,
+      "min_seconds": 1.5438891850062646,
+      "max_seconds": 1.6988636300084181,
+      "peak_allocated_gib": 31.807758808135986,
+      "peak_reserved_gib": 37.138671875
+    }
+  ],
+  "default_actor_time_reduction_percent": 62.86061262160345,
+  "best_actor_time_reduction_percent": 71.45497208609572,
+  "tests": {
+    "passed": 100,
+    "warnings": 2,
+    "observed_seconds": 13.78
+  },
+  "real_training_updates": [
+    {
+      "step": 1,
+      "lr": 1e-06,
+      "grad_norm": 8.900055408477783,
+      "actor_seconds": 5.260620593995554,
+      "step_seconds": 56.235423859994626,
+      "old_logprob_seconds": 0.34353976100101136,
+      "ref_seconds": 0.32644501799950376,
+      "logical_queries": 16.0,
+      "backend_queries": 14.0,
+      "cache_hits": 2.0,
+      "behavior_metrics": 126
+    },
+    {
+      "step": 2,
+      "lr": 1e-06,
+      "grad_norm": 6.6608277559280396,
+      "actor_seconds": 2.510925670998404,
+      "step_seconds": 50.96270393297891,
+      "old_logprob_seconds": 0.3816077630035579,
+      "ref_seconds": 0.3354003530112095,
+      "logical_queries": 19.0,
+      "backend_queries": 18.0,
+      "cache_hits": 1.0,
+      "behavior_metrics": 111
+    }
+  ],
+  "retrieval": {
+    "kind": "offline_exact_query_replay",
+    "trace": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/traces/train.jsonl",
+    "unique_queries": 32,
+    "logical_queries": 64,
+    "workload_sha256": "347c5989e209fd1ca2854ef94a1ff999afec1f029bbb46ce112d67d729b9372f",
+    "identical_results": true,
+    "stages": {
+      "raw": {
+        "logical_queries": 64,
+        "backend_query_attempts": 64,
+        "backend_http_requests": 4,
+        "wall_seconds": 0.22343113701208495
+      },
+      "cold": {
+        "logical_queries": 64,
+        "unique_queries": 32,
+        "batch_duplicates": 32,
+        "cache_hits": 0,
+        "cache_writes": 32,
+        "cache_errors": 0,
+        "backend_http_requests": 4,
+        "backend_query_attempts": 32,
+        "retries": 0,
+        "failures": 0,
+        "wall_seconds": 0.11127822601702064
+      },
+      "memory_warm": {
+        "logical_queries": 64,
+        "unique_queries": 32,
+        "batch_duplicates": 32,
+        "cache_hits": 64,
+        "cache_writes": 0,
+        "cache_errors": 0,
+        "backend_http_requests": 0,
+        "backend_query_attempts": 0,
+        "retries": 0,
+        "failures": 0,
+        "wall_seconds": 0.00035643999581225216
+      },
+      "disk_warm": {
+        "logical_queries": 64,
+        "unique_queries": 32,
+        "batch_duplicates": 32,
+        "cache_hits": 64,
+        "cache_writes": 0,
+        "cache_errors": 0,
+        "backend_http_requests": 0,
+        "backend_query_attempts": 0,
+        "retries": 0,
+        "failures": 0,
+        "wall_seconds": 0.003604328987421468
+      }
+    },
+    "limitation": "Repeated-query benchmark; cache hit rate is workload dependent, not full training speedup."
+  },
+  "artifacts": {
+    "initial": {
+      "pid": 1073,
+      "run_dir": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_profile_2gpu_20261119_091328",
+      "audit_dir": "/g22538014wej/cityins1122/cityins/analysis/engineering_profile_20261119_091328",
+      "command": [
+        "bash",
+        "run_engineering_benchmark_2gpu.sh"
+      ]
+    },
+    "pair": {
+      "pid": 5204,
+      "runs": {
+        "offload": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_offload_2gpu_20261119_092100",
+        "resident": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_resident_2gpu_20261119_092100"
+      },
+      "audit_dir": "/g22538014wej/cityins1122/cityins/analysis/engineering_grid_pair_20261119_092100",
+      "commands": {
+        "offload": [
+          "bash",
+          "run_engineering_benchmark_2gpu.sh",
+          "engineering.profile_micro_batches=[2,4,8]",
+          "actor_rollout_ref.actor.engineering_loss_group_size=1"
+        ],
+        "resident": [
+          "bash",
+          "run_engineering_benchmark_2gpu.sh",
+          "engineering.profile_micro_batches=[2,4,8]",
+          "actor_rollout_ref.actor.engineering_loss_group_size=1",
+          "engineering.workload_path=/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_offload_2gpu_20261119_092100/sampling/engineering_workload.pt",
+          "actor_rollout_ref.actor.fsdp_config.param_offload=false",
+          "actor_rollout_ref.actor.fsdp_config.grad_offload=false",
+          "actor_rollout_ref.actor.fsdp_config.optimizer_offload=false",
+          "actor_rollout_ref.ref.fsdp_config.param_offload=false"
+        ]
+      }
+    },
+    "resident": {
+      "pid": 10211,
+      "run_dir": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_resident_replay_2gpu_20261119_092829",
+      "audit_dir": "/g22538014wej/cityins1122/cityins/analysis/engineering_resident_replay_20261119_092829",
+      "command": [
+        "bash",
+        "run_engineering_benchmark_2gpu.sh",
+        "engineering.profile_micro_batches=[2,4,8]",
+        "actor_rollout_ref.actor.engineering_loss_group_size=1",
+        "engineering.workload_path=/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_offload_2gpu_20261119_092100/sampling/engineering_workload.pkl",
+        "actor_rollout_ref.actor.fsdp_config.param_offload=false",
+        "actor_rollout_ref.actor.fsdp_config.grad_offload=false",
+        "actor_rollout_ref.actor.fsdp_config.optimizer_offload=false",
+        "actor_rollout_ref.ref.fsdp_config.param_offload=false"
+      ],
+      "baseline_run": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_offload_2gpu_20261119_092100"
+    },
+    "smoke": {
+      "pid": 13669,
+      "run_dir": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_fast_smoke_2gpu_20261119_093454",
+      "audit_dir": "/g22538014wej/cityins1122/cityins/analysis/engineering_fast_smoke_20261119_093454",
+      "command": [
+        "bash",
+        "city_dynamic_2gpu_fast.sh",
+        "trainer.total_training_steps=3",
+        "trainer.test_freq=-1",
+        "trainer.save_freq=-1",
+        "+trainer.skip_final_validation=true",
+        "dynamic_sampling.max_candidate_batches=2",
+        "behavior_monitor.window_size=1",
+        "behavior_monitor.warmup_steps=0",
+        "behavior_monitor.min_target_trajectories=2"
+      ]
+    }
+  }
+}

@@ -1,0 +1,100 @@
+[
+  {
+    "label": "base",
+    "search_call_histogram": {
+      "0": 64,
+      "1": 129,
+      "2": 7
+    },
+    "em_by_support_visibility": {
+      "none": {
+        "n": 98,
+        "em": 1
+      },
+      "partial": {
+        "n": 80,
+        "em": 13
+      },
+      "all": {
+        "n": 22,
+        "em": 7
+      }
+    },
+    "two_or_more_searches": 7,
+    "em_among_two_or_more": 0,
+    "repeat_query_trajectories": 1,
+    "em": 21,
+    "support_facts_visible": 144,
+    "support_facts_total": 469,
+    "support_facts_returned": 144,
+    "all_support_questions": 22,
+    "all_support_questions_correct": 7,
+    "all_support_questions_wrong": 15,
+    "supportless_correct": 1,
+    "supportless_wrong": 97
+  },
+  {
+    "label": "step375",
+    "search_call_histogram": {
+      "1": 200
+    },
+    "em_by_support_visibility": {
+      "none": {
+        "n": 24,
+        "em": 4
+      },
+      "partial": {
+        "n": 130,
+        "em": 22
+      },
+      "all": {
+        "n": 46,
+        "em": 20
+      }
+    },
+    "two_or_more_searches": 0,
+    "em_among_two_or_more": 0,
+    "repeat_query_trajectories": 0,
+    "em": 46,
+    "support_facts_visible": 261,
+    "support_facts_total": 469,
+    "support_facts_returned": 261,
+    "all_support_questions": 46,
+    "all_support_questions_correct": 20,
+    "all_support_questions_wrong": 26,
+    "supportless_correct": 4,
+    "supportless_wrong": 20
+  },
+  {
+    "label": "step500",
+    "search_call_histogram": {
+      "1": 200
+    },
+    "em_by_support_visibility": {
+      "none": {
+        "n": 16,
+        "em": 2
+      },
+      "partial": {
+        "n": 130,
+        "em": 27
+      },
+      "all": {
+        "n": 54,
+        "em": 24
+      }
+    },
+    "two_or_more_searches": 0,
+    "em_among_two_or_more": 0,
+    "repeat_query_trajectories": 0,
+    "em": 53,
+    "support_facts_visible": 280,
+    "support_facts_total": 469,
+    "support_facts_returned": 280,
+    "all_support_questions": 54,
+    "all_support_questions_correct": 24,
+    "all_support_questions_wrong": 30,
+    "supportless_correct": 2,
+    "supportless_wrong": 14
+  }
+]

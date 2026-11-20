@@ -14,14 +14,15 @@ def main():
     out.mkdir(parents=True,exist_ok=True)
     checks=[]
     for gpu in (1,2):
-        for script in (f'train_grpo_dynamic_sampling_{gpu}gpu.sh',f'run_grpo_dynamic_sampling_{gpu}gpu_with_bm25.sh'):
+        launcher = 'city_dynamic_1gpu.sh' if gpu == 1 else 'run_grpo_dynamic_sampling_2gpu_with_bm25.sh'
+        for script in (f'train_grpo_dynamic_sampling_{gpu}gpu.sh', launcher):
             subprocess.run(['bash','-n',script],check=True)
         for enabled in (True,False):
             preview=out/f'preview_must_not_be_created_{gpu}_{enabled}'
             if preview.exists():raise RuntimeError('Preview output directory unexpectedly exists')
             env=dict(os.environ,SAMPLING_ENABLED=str(enabled).lower(),MAX_CANDIDATE_BATCHES='3',
                      EVIDENCE_ALPHA='0.1',RUN_DIR=str(preview))
-            result=subprocess.run(['bash',f'run_grpo_dynamic_sampling_{gpu}gpu_with_bm25.sh','--print-config'],
+            result=subprocess.run(['bash',launcher,'--print-config'],
                                   env=env,text=True,capture_output=True,check=True)
             config=OmegaConf.create(yaml.safe_load(result.stdout))
             OmegaConf.resolve(config)

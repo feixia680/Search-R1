@@ -1,0 +1,31 @@
+{
+  "smoke_passed": true,
+  "training_steps": 2,
+  "training_trajectories": 32,
+  "validation_trajectories": 4,
+  "checkpoint": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/evidence_dapo_token_smoke_30538_20261120_095215/checkpoints/actor/global_step_2",
+  "checkpoint_tensor_count": 435,
+  "checkpoint_bytes": 13588463912,
+  "parameter_max_absolute_changes": {
+    "model.layers.0.self_attn.q_proj.weight": 4.0102750062942505e-06,
+    "model.layers.0.input_layernorm.weight": 4.0531158447265625e-06,
+    "model.norm.weight": 3.814697265625e-06
+  },
+  "metrics": [
+    {
+      "step": "1",
+      "algorithm_a/total_reward": "0.019",
+      "actor/token_mean_loss": "1.000",
+      "actor/grad_norm": "1.333",
+      "timing_s/step": "149.443"
+    },
+    {
+      "step": "2",
+      "algorithm_a/total_reward": "0.079",
+      "actor/token_mean_loss": "1.000",
+      "actor/grad_norm": "1.104",
+      "timing_s/step": "152.105"
+    }
+  ],
+  "formal_training_started": false
+}

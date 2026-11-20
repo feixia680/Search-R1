@@ -1,0 +1,10 @@
+{
+  "attempted": 320,
+  "stop": 21,
+  "continue": 36,
+  "supplement_user_question_first": 20,
+  "supplement_policy_first": 1,
+  "model": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/checkpoints/actor/global_step_500",
+  "split": "train",
+  "dataset_sha256": "b792987900d296864b01a71d89567cd1380497552563923a59338c8bdc72157b"
+}

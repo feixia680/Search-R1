@@ -1,0 +1,30 @@
+{
+  "seed": 42,
+  "heldout_sampling_seed": 20261113,
+  "original_n": 200,
+  "heldout_n": 500,
+  "heldout_excludes_old_questions": true,
+  "heldout_excludes_exact_normalized_training_questions": true,
+  "heldout_requires_valid_annotation": true,
+  "heldout_previously_selected_checkpoints": false,
+  "batch_size": 16,
+  "greedy": true,
+  "topk": 3,
+  "max_turns": 2,
+  "max_start_length": 512,
+  "max_prompt_length": 2816,
+  "max_response_length": 256,
+  "max_obs_length": 1024,
+  "native_policy": "autonomous",
+  "forced_policies": [
+    "fixed_one",
+    "fixed_two"
+  ],
+  "forced_prefixes": true,
+  "forced_first_query_shared_between_fixed_policies": true,
+  "confidence_threshold_policy": false,
+  "gold_labels_used_for_decisions": false,
+  "forced_action_content_sanitization": "trim at first <; empty query falls back to question; close action tag enforced",
+  "timing_claims": false,
+  "training": false
+}

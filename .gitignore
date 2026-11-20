@@ -124,3 +124,8 @@ log/
 /verl_checkpoints/
 # Isolated Algorithm A artifacts
 algorithm_a_runs/
+
+# Local experiment runtime caches and process IDs
+/analysis/**/run/tmp/
+/analysis/**/run/ray_runtime
+/analysis/**/*.pid

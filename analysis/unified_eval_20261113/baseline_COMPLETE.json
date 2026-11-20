@@ -1,0 +1,7 @@
+{
+  "model": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_500",
+  "label": "baseline",
+  "n": 700,
+  "policies": 3,
+  "empty_query_fallbacks": 0
+}

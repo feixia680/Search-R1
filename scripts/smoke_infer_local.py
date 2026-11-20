@@ -1,7 +1,7 @@
 import json,re,time
 import torch,pandas as pd,requests
 from transformers import AutoTokenizer,AutoModelForCausalLM,StoppingCriteria,StoppingCriteriaList
-ROOT="/g22538014wej/11x22f/Search-R1"; MODEL=ROOT+"/models/Qwen2.5-3B"; OUT=ROOT+"/logs/hotpot_inference_5.jsonl"
+ROOT="/g22538014wej/cityins1122/cityins"; MODEL=ROOT+"/models/Qwen2.5-3B"; OUT=ROOT+"/logs/hotpot_inference_5.jsonl"
 tok=AutoTokenizer.from_pretrained(MODEL)
 model=AutoModelForCausalLM.from_pretrained(MODEL,torch_dtype=torch.bfloat16,device_map="cuda",low_cpu_mem_usage=True)
 df=pd.read_parquet(ROOT+"/data/processed/hotpotqa/test.parquet").head(5)

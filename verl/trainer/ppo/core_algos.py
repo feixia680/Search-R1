@@ -160,7 +160,24 @@ def compute_rewards(token_level_scores, old_log_prob, ref_log_prob, kl_ratio):
     return token_level_scores - kl * kl_ratio
 
 
-def compute_policy_loss(old_log_prob, log_prob, advantages, eos_mask, cliprange):
+def token_loss_normalizer(response_mask):
+    """Scale a local token sum into the global optimizer-minibatch mean.
+
+    Call once before splitting the minibatch. Distributed gradient averaging
+    divides by world size, so local sums need the matching world-size factor.
+    The mask must exclude observations and padding.
+    """
+    total_tokens = response_mask.sum(dtype=torch.float32)
+    world_size = 1
+    if torch.distributed.is_initialized():
+        torch.distributed.all_reduce(total_tokens)
+        world_size = torch.distributed.get_world_size()
+    if total_tokens.item() <= 0:
+        raise ValueError('Optimizer minibatch has no policy tokens')
+    return world_size / total_tokens
+
+
+def compute_policy_loss(old_log_prob, log_prob, advantages, eos_mask, cliprange, loss_normalizer=None):
     """Adapted from https://github.com/huggingface/trl/blob/main/trl/trainer/ppo_trainer.py#L1122
 
     Args:
@@ -174,6 +191,9 @@ def compute_policy_loss(old_log_prob, log_prob, advantages, eos_mask, cliprange)
             shape: (bs, response_length)
         cliprange: (float)
             The clip range used in PPO. See https://arxiv.org/abs/1707.06347
+        loss_normalizer: optional scalar Tensor
+            Weight for local token sums, computed over the entire optimizer
+            minibatch. None preserves the original microbatch masked mean.
 
     Returns:
         pg_loss: `a scalar torch.Tensor`
@@ -182,15 +202,20 @@ def compute_policy_loss(old_log_prob, log_prob, advantages, eos_mask, cliprange)
             a float number indicating the fraction of policy gradient loss being clipped
 
     """
+    def reduce(values):
+        if loss_normalizer is None:
+            return verl_F.masked_mean(values, eos_mask)
+        return (values * eos_mask).sum() * loss_normalizer
+
     negative_approx_kl = log_prob - old_log_prob
     ratio = torch.exp(negative_approx_kl)
-    ppo_kl = verl_F.masked_mean(-negative_approx_kl, eos_mask)
+    ppo_kl = reduce(-negative_approx_kl)
 
     pg_losses = -advantages * ratio
     pg_losses2 = -advantages * torch.clamp(ratio, 1.0 - cliprange, 1.0 + cliprange)
 
-    pg_loss = verl_F.masked_mean(torch.max(pg_losses, pg_losses2), eos_mask)
-    pg_clipfrac = verl_F.masked_mean(torch.gt(pg_losses2, pg_losses).float(), eos_mask)
+    pg_loss = reduce(torch.max(pg_losses, pg_losses2))
+    pg_clipfrac = reduce(torch.gt(pg_losses2, pg_losses).float())
     return pg_loss, pg_clipfrac, ppo_kl
 
 

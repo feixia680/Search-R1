@@ -41,6 +41,7 @@ from verl.utils.seqlen_balancing import get_seqlen_balanced_partitions, log_seql
 
 import re
 from search_r1.llm_agent.generation import LLMGenerationManager, GenerationConfig
+from search_r1.search.retrieval_client import runtime_options
 
 WorkerType = Type[Worker]
 
@@ -453,6 +454,7 @@ class RayPPOTrainer(object):
             search_url = self.config.retriever.url,
             topk = self.config.retriever.topk,
             search_timeout = self.config.retriever.get('timeout', 30.),
+            retrieval_runtime = runtime_options(self.config),
         )
 
         # Agent config preparation
@@ -687,6 +689,7 @@ class RayPPOTrainer(object):
             search_url = self.config.retriever.url,
             topk = self.config.retriever.topk,
             search_timeout = self.config.retriever.get('timeout', 30.),
+            retrieval_runtime = runtime_options(self.config),
         )
 
         generation_manager = LLMGenerationManager(

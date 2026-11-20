@@ -1,0 +1,9 @@
+{
+  "pid": 1073,
+  "run_dir": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/engineering_profile_2gpu_20261119_091328",
+  "audit_dir": "/g22538014wej/cityins1122/cityins/analysis/engineering_profile_20261119_091328",
+  "command": [
+    "bash",
+    "run_engineering_benchmark_2gpu.sh"
+  ]
+}

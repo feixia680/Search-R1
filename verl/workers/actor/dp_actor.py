@@ -52,6 +52,10 @@ class DataParallelPPOActor(BasePPOActor):
         print(f'Actor use_remove_padding={self.use_remove_padding}')
         self.ulysses_sequence_parallel_size = self.config.ulysses_sequence_parallel_size
         self.use_ulysses_sp = self.ulysses_sequence_parallel_size > 1
+        self.loss_agg_mode = self.config.get('loss_agg_mode', 'legacy-microbatch-mean')
+        if self.loss_agg_mode not in ('legacy-microbatch-mean', 'token-mean'):
+            raise ValueError(f'Unsupported loss_agg_mode: {self.loss_agg_mode}')
+        print(f'Actor loss_agg_mode={self.loss_agg_mode}')
 
         self.compute_entropy_from_logits = torch.compile(verl_F.entropy_from_logits, dynamic=True)
 
@@ -223,6 +227,16 @@ class DataParallelPPOActor(BasePPOActor):
         for batch_idx, data in enumerate(dataloader):
             # split batch into micro_batches
             mini_batch = data
+            loss_normalizer = None
+            minibatch_metrics = {}
+            if self.loss_agg_mode == 'token-mean':
+                width = mini_batch['responses'].shape[-1]
+                policy_mask = mini_batch['attention_mask'][:, -width:]
+                if self.config.state_masking:
+                    policy_mask = mini_batch['loss_mask']
+                loss_normalizer = core_algos.token_loss_normalizer(policy_mask.cuda())
+                append_to_dict(metrics, {'actor/policy_tokens_per_rank': policy_mask.sum().item(),
+                                         'actor/token_mean_loss': 1.0})
             if self.config.use_dynamic_bsz:
                 max_token_len = self.config.ppo_max_token_len_per_gpu * self.ulysses_sequence_parallel_size
                 micro_batches, _ = rearrange_micro_batches(batch=mini_batch, max_token_len=max_token_len)
@@ -253,9 +267,13 @@ class DataParallelPPOActor(BasePPOActor):
                                                                               log_prob=log_prob,
                                                                               advantages=advantages,
                                                                               eos_mask=response_mask,
-                                                                              cliprange=clip_ratio)
+                                                                              cliprange=clip_ratio,
+                                                                              loss_normalizer=loss_normalizer)
                 # compute entropy loss from entropy
-                entropy_loss = verl_F.masked_mean(entropy, response_mask)
+                if loss_normalizer is None:
+                    entropy_loss = verl_F.masked_mean(entropy, response_mask)
+                else:
+                    entropy_loss = (entropy * response_mask).sum() * loss_normalizer
 
                 # compute policy loss
                 policy_loss = pg_loss - entropy_loss * entropy_coeff
@@ -266,13 +284,20 @@ class DataParallelPPOActor(BasePPOActor):
                     kld = core_algos.kl_penalty(logprob=log_prob,
                                                 ref_logprob=ref_log_prob,
                                                 kl_penalty=self.config.kl_loss_type)
-                    kl_loss = masked_mean(kld, response_mask)
+                    if loss_normalizer is None:
+                        kl_loss = masked_mean(kld, response_mask)
+                    else:
+                        kl_loss = (kld * response_mask).sum() * loss_normalizer
 
                     policy_loss = policy_loss + kl_loss * self.config.kl_loss_coef
-                    metrics['actor/kl_loss'] = kl_loss.detach().item()
+                    if loss_normalizer is None:
+                        metrics['actor/kl_loss'] = kl_loss.detach().item()
+                    else:
+                        minibatch_metrics['actor/kl_loss'] = (
+                            minibatch_metrics.get('actor/kl_loss', 0.) + kl_loss.detach().item())
                     metrics['actor/kl_coef'] = self.config.kl_loss_coef
 
-                loss = policy_loss / self.gradient_accumulation
+                loss = policy_loss if loss_normalizer is not None else policy_loss / self.gradient_accumulation
                 loss.backward()
 
                 data = {
@@ -281,8 +306,14 @@ class DataParallelPPOActor(BasePPOActor):
                     'actor/pg_clipfrac': pg_clipfrac.detach().item(),
                     'actor/ppo_kl': ppo_kl.detach().item(),
                 }
-                append_to_dict(metrics, data)
+                if loss_normalizer is None:
+                    append_to_dict(metrics, data)
+                else:
+                    for key, value in data.items():
+                        minibatch_metrics[key] = minibatch_metrics.get(key, 0.) + value
 
+            if loss_normalizer is not None:
+                append_to_dict(metrics, minibatch_metrics)
             grad_norm = self._optimizer_step()
             data = {'actor/grad_norm': grad_norm.detach().item()}
             append_to_dict(metrics, data)

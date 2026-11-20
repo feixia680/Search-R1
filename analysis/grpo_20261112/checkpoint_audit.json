@@ -1,0 +1,153 @@
+{
+  "base": {
+    "path": "/g22538014wej/11x22f/Search-R1/models/Qwen2.5-3B",
+    "files": [
+      {
+        "name": "model-00001-of-00002.safetensors",
+        "size": 3968658944,
+        "header_extent_valid": true
+      },
+      {
+        "name": "model-00002-of-00002.safetensors",
+        "size": 2203268048,
+        "header_extent_valid": true
+      }
+    ],
+    "tensor_count": 434,
+    "stored_parameters": 3085938688,
+    "dtypes": [
+      "BF16"
+    ],
+    "indexed_tensors_present": true
+  },
+  "checkpoints": [
+    {
+      "path": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_125",
+      "files": [
+        {
+          "name": "model-00001-of-00003.safetensors",
+          "size": 4982131536,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00002-of-00003.safetensors",
+          "size": 4932949336,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00003-of-00003.safetensors",
+          "size": 3673383040,
+          "header_extent_valid": true
+        }
+      ],
+      "tensor_count": 435,
+      "stored_parameters": 3397103616,
+      "dtypes": [
+        "F32"
+      ],
+      "indexed_tensors_present": true,
+      "step": 125,
+      "missing_base_tensors": [],
+      "shape_mismatches": [],
+      "extra_tensors": [
+        "lm_head.weight"
+      ]
+    },
+    {
+      "path": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_250",
+      "files": [
+        {
+          "name": "model-00001-of-00003.safetensors",
+          "size": 4982131536,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00002-of-00003.safetensors",
+          "size": 4932949336,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00003-of-00003.safetensors",
+          "size": 3673383040,
+          "header_extent_valid": true
+        }
+      ],
+      "tensor_count": 435,
+      "stored_parameters": 3397103616,
+      "dtypes": [
+        "F32"
+      ],
+      "indexed_tensors_present": true,
+      "step": 250,
+      "missing_base_tensors": [],
+      "shape_mismatches": [],
+      "extra_tensors": [
+        "lm_head.weight"
+      ]
+    },
+    {
+      "path": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_375",
+      "files": [
+        {
+          "name": "model-00001-of-00003.safetensors",
+          "size": 4982131536,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00002-of-00003.safetensors",
+          "size": 4932949336,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00003-of-00003.safetensors",
+          "size": 3673383040,
+          "header_extent_valid": true
+        }
+      ],
+      "tensor_count": 435,
+      "stored_parameters": 3397103616,
+      "dtypes": [
+        "F32"
+      ],
+      "indexed_tensors_present": true,
+      "step": 375,
+      "missing_base_tensors": [],
+      "shape_mismatches": [],
+      "extra_tensors": [
+        "lm_head.weight"
+      ]
+    },
+    {
+      "path": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_500",
+      "files": [
+        {
+          "name": "model-00001-of-00003.safetensors",
+          "size": 4982131536,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00002-of-00003.safetensors",
+          "size": 4932949336,
+          "header_extent_valid": true
+        },
+        {
+          "name": "model-00003-of-00003.safetensors",
+          "size": 3673383040,
+          "header_extent_valid": true
+        }
+      ],
+      "tensor_count": 435,
+      "stored_parameters": 3397103616,
+      "dtypes": [
+        "F32"
+      ],
+      "indexed_tensors_present": true,
+      "step": 500,
+      "missing_base_tensors": [],
+      "shape_mismatches": [],
+      "extra_tensors": [
+        "lm_head.weight"
+      ]
+    }
+  ]
+}

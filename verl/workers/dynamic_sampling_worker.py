@@ -3,6 +3,7 @@ import json
 import os
 from pathlib import Path
 import types
+import time
 
 import torch
 import torch.distributed as dist
@@ -36,6 +37,11 @@ def attach_numerical_guards(actor, diagnostic_dir=None):
     def guarded_forward(self, micro_batch, temperature):
         bad = [key for key in ('old_log_probs', 'ref_log_prob', 'advantages')
                if key in micro_batch and not torch.isfinite(micro_batch[key]).all()]
+        group = int(getattr(self.config, 'engineering_loss_group_size', 0))
+        if group and 'loss_mask' in micro_batch:
+            mask = micro_batch['loss_mask']
+            if mask.shape[0] % group or (mask.reshape(-1, group*mask.shape[-1]).sum(-1)<=0).any():
+                bad.append('empty_loss_group')
         if 'loss_mask' in micro_batch and micro_batch['loss_mask'].sum().item() <= 0:
             bad.append('empty_loss_mask')
         details = dict(getattr(self, '_dynamic_update_context', {}), bad_fields=bad,
@@ -71,9 +77,49 @@ class GuardedActorRolloutRefWorker(ActorRolloutRefWorker):
                 actor_module=self.actor_module_fsdp, actor_optimizer=self.actor_optimizer)
             attach_numerical_guards(self.actor, os.environ.get('DYNAMIC_DIAGNOSTIC_DIR'))
 
+    @register(dispatch_mode=Dispatch.ONE_TO_ALL)
+    def prepare_engineering_replay(self):
+        # Real generation frees KV before actor updates; reproduce that state
+        # when replay bypasses generation, so memory measurements are comparable.
+        if self._is_actor and self.config.rollout.free_cache_engine:
+            self.rollout.inference_engine.free_cache_engine()
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
+
     @register(dispatch_mode=Dispatch.DP_COMPUTE_PROTO)
     def update_actor(self, data):
+        requested_micro = data.meta_info.get('engineering_micro_batch_size')
+        if requested_micro is not None:
+            world = dist.get_world_size() if dist.is_initialized() else 1
+            if requested_micro % world or requested_micro//world < 1:
+                raise ValueError('Profile microbatch must divide across ranks')
+            self.actor.config.ppo_micro_batch_size = requested_micro//world
         self.actor._dynamic_update_context = dict(
             global_step=data.meta_info.get('global_step'),
             sample_ids=[str(x) for x in data.non_tensor_batch.get('index', [])])
-        return super().update_actor(data)
+        if not self.config.actor.get('engineering_profile', False):
+            return super().update_actor(data)
+        tokens = int(data.batch['attention_mask'].sum().item())
+        torch.cuda.synchronize()
+        torch.cuda.reset_peak_memory_stats()
+        started = time.perf_counter()
+        output = super().update_actor(data)
+        torch.cuda.synchronize()
+        record = dict(rank=dist.get_rank() if dist.is_initialized() else 0,
+            global_step=data.meta_info.get('global_step'),
+            phase=data.meta_info.get('engineering_profile_phase', 'train'),
+            balanced=data.meta_info.get('engineering_balanced'), tokens=tokens,
+            global_micro_batch_size=requested_micro,
+            loss_group_size=self.actor.config.get('engineering_loss_group_size', 0),
+            seconds=time.perf_counter()-started,
+            peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,
+            peak_reserved_gib=torch.cuda.max_memory_reserved()/2**30)
+        directory = os.environ.get('DYNAMIC_DIAGNOSTIC_DIR')
+        if directory:
+            path = Path(directory).parent/'engineering_profiles'
+            path.mkdir(parents=True, exist_ok=True)
+            with (path/f"rank_{record['rank']}.jsonl").open('a') as stream:
+                stream.write(json.dumps(record)+'\n')
+        for key in ('seconds', 'peak_allocated_gib', 'peak_reserved_gib', 'tokens'):
+            output.meta_info['metrics']['engineering/rank_mean_'+key] = [record[key]]
+        return output

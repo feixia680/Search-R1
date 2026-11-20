@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""GPU-side validation for the rollout engineering runtime.
+"""GPU-side engineering validation without model training.
 
-This test does not load a language model. It validates real CUDA allocation,
-TokenPacker rank assignment, trace writing, and the bounded OOM recovery policy.
-Use ENGINEERING_REAL_OOM=1 only on an otherwise idle GPU.
+Checks real CUDA allocation, concurrent Rollout Trace writes, token-budget
+packing, NCCL rank balancing (when launched with torchrun), and bounded OOM
+recovery. It does not load a model or start a retriever.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
+import threading
 import time
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -34,8 +35,7 @@ def init_distributed() -> int:
     if world_size > 1 and not dist.is_initialized():
         dist.init_process_group(backend="nccl")
     if torch.cuda.is_available():
-        local_rank = int(os.environ.get("LOCAL_RANK", "0"))
-        torch.cuda.set_device(local_rank)
+        torch.cuda.set_device(int(os.environ.get("LOCAL_RANK", "0")))
     return world_size
 
 
@@ -50,18 +50,36 @@ def barrier() -> None:
 
 def run_trace_check(report_dir: Path) -> Dict[str, object]:
     path = report_dir / "rollout_trace.jsonl"
-    trace = RolloutTrace("gpu-smoke-traj", "gpu-smoke-question", "gpu-smoke-group")
-    events = [
-        trace.event("query_generation", input_tokens=32, output_tokens=8),
-        trace.event("tool_call", query="gpu engineering smoke", cache_hit=False),
-        trace.event("answer", evidence_ids=("smoke-fact",)),
-    ]
-    with RolloutTraceWriter(path, fsync_every=1) as writer:
-        writer.write_many(events)
+    writer = RolloutTraceWriter(path, fsync_every=0)
+    errors: List[BaseException] = []
+
+    def write_events(worker_id: int) -> None:
+        try:
+            trace = RolloutTrace("traj-%d" % worker_id, "question-%d" % worker_id, "group-%d" % worker_id)
+            writer.write_many([
+                trace.event("query_generation", input_tokens=32, output_tokens=8),
+                trace.event("tool_call", query="engineering-%d" % worker_id, cache_hit=False),
+                trace.event("answer", evidence_ids=("fact-%d" % worker_id,)),
+            ])
+        except BaseException as error:
+            errors.append(error)
+
+    threads = [threading.Thread(target=write_events, args=(index,)) for index in range(32)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    writer.close()
+    if errors:
+        raise errors[0]
     records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
-    if [record["step_id"] for record in records] != [0, 1, 2]:
-        raise AssertionError("trace step ordering is not stable")
-    return {"events": len(records), "path": str(path)}
+    if len(records) != 96:
+        raise AssertionError("concurrent trace writer lost records")
+    if len({record["trajectory_id"] for record in records}) != 32:
+        raise AssertionError("trace trajectory identities collided")
+    if any(record["step_id"] not in (0, 1, 2) for record in records):
+        raise AssertionError("trace step id is invalid")
+    return {"events": len(records), "trajectories": 32, "path": str(path)}
 
 
 def run_recovery_check() -> Dict[str, object]:
@@ -82,10 +100,11 @@ def run_recovery_check() -> Dict[str, object]:
 
 
 def run_real_oom_check(device: torch.device) -> Dict[str, object]:
-    if os.environ.get("ENGINEERING_REAL_OOM", "0") != "1":
+    enabled = os.environ.get("ENGINEERING_REAL_OOM", "1") == "1"
+    if not enabled:
         return {"enabled": False, "triggered": False}
     free_bytes, _ = torch.cuda.mem_get_info(device)
-    request_bytes = int(free_bytes + 256 * 1024 * 1024)
+    request_bytes = int(free_bytes + 128 * 1024 * 1024)
     elements = max(1, request_bytes // 4)
     tensor: Optional[torch.Tensor] = None
     triggered = False
@@ -99,7 +118,10 @@ def run_real_oom_check(device: torch.device) -> Dict[str, object]:
     finally:
         del tensor
         torch.cuda.empty_cache()
-    return {"enabled": True, "triggered": triggered, "requested_bytes": request_bytes}
+        torch.cuda.synchronize(device)
+    if not triggered:
+        raise AssertionError("real OOM probe did not trigger; recovery was not validated")
+    return {"enabled": True, "triggered": True, "requested_bytes": request_bytes}
 
 
 def run_token_balance_check(device: torch.device, world_size: int) -> Dict[str, object]:
@@ -130,6 +152,8 @@ def run_token_balance_check(device: torch.device, world_size: int) -> Dict[str, 
     nonzero = [value for value in rank_loads if value > 0]
     imbalance = max(nonzero) / min(nonzero) if nonzero else 1.0
     padding_ratio = 1.0 - real_tokens / padded_tokens if padded_tokens else 0.0
+    if padding_ratio < 0 or padding_ratio >= 1:
+        raise AssertionError("invalid padding ratio")
     return {
         "world_size": world_size,
         "batches": len(batches),

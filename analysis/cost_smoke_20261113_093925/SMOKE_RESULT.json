@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "smoke_dir": "/g22538014wej/11x22f/Search-R1/analysis/cost_smoke_20261113_093925",
+  "training_steps": [
+    1,
+    2
+  ],
+  "train_trajectories": 32,
+  "validation_trajectories": 8,
+  "validation_original200_ids": [
+    "1501",
+    "2586",
+    "2653",
+    "1055",
+    "705",
+    "106",
+    "589",
+    "2468"
+  ],
+  "train_retrieval_calls": 23,
+  "train_after_full_calls": 0,
+  "train_positive_evidence_trajectories": 12,
+  "train_missing_answers": 14,
+  "train_guarded_trajectories": 14,
+  "train_reward_min": -1.03,
+  "train_reward_max": 0.045000000000000005,
+  "nonconstant_grpo_groups": 14,
+  "retrieval_failures": 0,
+  "all_trace_reward_components_verified": true,
+  "actor_grad_norm": [
+    3.839,
+    3.251
+  ],
+  "checkpoint": "/g22538014wej/11x22f/Search-R1/analysis/cost_smoke_20261113_093925/run/checkpoints/actor/global_step_2",
+  "checkpoint_tensor_keys": 435,
+  "sampled_parameter_values": 1047872,
+  "sampled_changed_parameter_values": 1047558,
+  "max_sampled_parameter_delta": 4.0531158447265625e-06,
+  "scope": "1-GPU two-update execution test; not an accuracy or long-run stability result."
+}

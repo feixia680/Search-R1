@@ -1,0 +1,29 @@
+{
+  "project": "/g22538014wej/cityins1122/cityins",
+  "environment": "/g22538014wej/cityins1122/envs/search1",
+  "checked_at": "2026-11-18T05:43:52.905981+00:00",
+  "tests": {
+    "launcher_tests": "5 passed",
+    "configurations": 4,
+    "invalid_configurations": 3,
+    "bm25_real_post": "passed",
+    "dataset_hashes_and_annotations": "passed",
+    "model_shards_and_tokenizer": "passed",
+    "shell_syntax": "passed",
+    "no_old_paths": "passed",
+    "gpu_training": "not run: no GPU"
+  },
+  "port_8000_open_after_check": false,
+  "files": {
+    "render_mc_aerial_c36_argmax.sh": "4b54035e7de06c0df8057800c85499add4f0569407f0e3a47e9604232459dc14",
+    "start_bm25_local.sh": "4b629ac8d9ef53f085d0ffadc854fee6e838aa4f6131731cdfeabc61caaf3f67",
+    "scripts/search_environment.sh": "e3514924486da25c44f89a34c8aaf22e4ab645c55a0c795691217063ec3b4f59",
+    "scripts/run_dynamic_sampling.sh": "80df6cb90caa03a7af0d315c4badc284e3409232ddbeb07800a97277d3961390",
+    "evaluation/manage_dynamic_sampling_launch.py": "975382061fc00279a5e7b4ede1cd43374e9a96490ff7f10ea03af9e6c8eb2991",
+    "evaluation/check_evidence_training_inputs.py": "9c98c6440238c5f40b28305555ca414a781d50366549d004b3bdb1d883776cd6",
+    "train_grpo_dynamic_sampling_1gpu.sh": "2658445b96141b5ff45cef687a85d4d188617b42cd63ac11dd83c56564db9470",
+    "train_grpo_dynamic_sampling_2gpu.sh": "dc6d98637507361598e2f25c8441accdfa5b71ca3bdaadc3c192e15dd0937ac2",
+    "run_grpo_dynamic_sampling_1gpu_with_bm25.sh": "c34c2cb8332114217aad69c37c9319c33040641661d6d1047830dea51a0a6485",
+    "run_grpo_dynamic_sampling_2gpu_with_bm25.sh": "ecc1d78c5da4ca3c450e636a14eda9b87d906338e34b7cd44f4606c200e9e90c"
+  }
+}

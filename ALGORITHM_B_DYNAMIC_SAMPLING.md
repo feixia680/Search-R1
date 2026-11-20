@@ -114,14 +114,14 @@ Run from /g22538014wej/11x22f/Search-R1.
 Preview without GPU use:
 
 ```bash
-bash run_grpo_dynamic_sampling_1gpu_with_bm25.sh --print-config
+bash city_dynamic_1gpu.sh --print-config
 bash run_grpo_dynamic_sampling_2gpu_with_bm25.sh --print-config
 ```
 
 Dynamic sampling (starts training, requires the stated number of free GPUs):
 
 ```bash
-bash run_grpo_dynamic_sampling_1gpu_with_bm25.sh
+bash city_dynamic_1gpu.sh
 bash run_grpo_dynamic_sampling_2gpu_with_bm25.sh
 ```
 

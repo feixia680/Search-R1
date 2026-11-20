@@ -1,0 +1,16 @@
+{
+  "steps": 624,
+  "first_alert_step": {
+    "MISSING_FINAL_ANSWER": 101,
+    "SEARCH_BUDGET_TRUNCATION": 101,
+    "SECOND_SEARCH_UNDERUSE_WITH_INCOMPLETE_EVIDENCE": 143
+  },
+  "alert_steps": {
+    "MISSING_FINAL_ANSWER": 33,
+    "SEARCH_BUDGET_TRUNCATION": 35,
+    "SECOND_SEARCH_UNDERUSE_WITH_INCOMPLETE_EVIDENCE": 482
+  },
+  "source_run": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/dynamic_sampling_1gpu_a0.1_s42_20261118_085420",
+  "manifest_sha256": "cdeacb2faef17630fd4c40785e92ad39e0d389add868ed72136ed6ee9c8b5c75",
+  "scope": "Replay only; no model, GPU, network or reward changes"
+}

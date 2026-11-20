@@ -1,0 +1,75 @@
+{
+  "n": 48,
+  "fixed_insufficient_n": 47,
+  "fixed_sufficient_n": 1,
+  "models": {
+    "evidence": {
+      "2": {
+        "em": 0.10416666666666667,
+        "mean_calls": 1.9166666666666667,
+        "correct": 5,
+        "complete": 7,
+        "mean_coverage": 0.4288194444444444,
+        "error_categories": {
+          "correct": 5,
+          "later_search_added_no_support": 17,
+          "added_support_but_chain_incomplete": 6,
+          "answered_early_with_incomplete_support": 2,
+          "attempted_search_beyond_budget": 14,
+          "wrong_despite_full_visible_support": 4
+        },
+        "fixed_insufficient_correct": 5,
+        "fixed_sufficient_calls": 1,
+        "second_search": 44
+      },
+      "4": {
+        "em": 0.16666666666666666,
+        "mean_calls": 2.2083333333333335,
+        "correct": 8,
+        "complete": 8,
+        "mean_coverage": 0.4600694444444445,
+        "error_categories": {
+          "correct": 8,
+          "later_search_added_no_support": 22,
+          "added_support_but_chain_incomplete": 12,
+          "answered_early_with_incomplete_support": 2,
+          "wrong_despite_full_visible_support": 4
+        },
+        "fixed_insufficient_correct": 8,
+        "fixed_sufficient_calls": 1,
+        "second_search": 44
+      },
+      "paired_2_to_4": {
+        "gains": [
+          "3hop2__132957_483843_40768",
+          "4hop3__193820_466199_128875_72134",
+          "3hop1__593288_720914_41132"
+        ],
+        "losses": [],
+        "gains_with_new_support_after_second": [
+          "3hop2__132957_483843_40768",
+          "4hop3__193820_466199_128875_72134",
+          "3hop1__593288_720914_41132"
+        ]
+      }
+    },
+    "dynamic": {
+      "4": {
+        "em": 0.020833333333333332,
+        "mean_calls": 1.0,
+        "correct": 1,
+        "complete": 1,
+        "mean_coverage": 0.2934027777777778,
+        "error_categories": {
+          "answered_early_with_incomplete_support": 46,
+          "correct": 1,
+          "wrong_despite_full_visible_support": 1
+        },
+        "fixed_insufficient_correct": 1,
+        "fixed_sufficient_calls": 1,
+        "second_search": 0
+      }
+    }
+  },
+  "matched_cost_mixture_estimate": null
+}

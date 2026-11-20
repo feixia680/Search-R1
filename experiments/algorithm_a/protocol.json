@@ -1,0 +1,55 @@
+{
+  "baseline_config": "/g22538014wej/11x22f/Search-R1/outputs/2026-11-11/11-37-52/.hydra/config.yaml",
+  "baseline_config_sha256": "46e593f9d08947011e316995d8649fcde793dac6c108cb74ca2d6bf851a18cae",
+  "candidate_config_sha256": "b46e15a57e03a47fa4f8179f77a40472fe4bc17ebc127976d5215827da54fa7c",
+  "candidate_alpha": 0.1,
+  "alpha_is_tuned": false,
+  "baseline_checkpoint": "/g22538014wej/11x22f/Search-R1/verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu/actor/global_step_500",
+  "comparison_update": 500,
+  "scheduler_total_steps": 625,
+  "expected_warmup_steps": 178,
+  "historical_driver_seed_recorded": false,
+  "historical_shuffle_order_recoverable": false,
+  "formal_gpu_count": 2,
+  "budget_sweep": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "training_launched": false,
+  "changes": {
+    "data.train_files": {
+      "baseline": "data/processed/hotpotqa/train.parquet",
+      "candidate": "/g22538014wej/11x22f/Search-R1/algorithm_a_data/evidence/train.parquet"
+    },
+    "data.val_files": {
+      "baseline": "data/processed/hotpotqa/test.parquet",
+      "candidate": "/g22538014wej/11x22f/Search-R1/algorithm_a_data/evidence/test.parquet"
+    },
+    "search_reward": {
+      "baseline": null,
+      "candidate": {
+        "alpha": 0.1,
+        "beta": 0.0,
+        "gamma": 0.0,
+        "delta": 0.0,
+        "require_final_answer": false,
+        "invalid_evidence_policy": "skip",
+        "trace_dir": "${trainer.default_local_dir}/traces"
+      }
+    },
+    "trainer.default_local_dir": {
+      "baseline": "verl_checkpoints/hotpotqa-qwen25-3b-grpo-2gpu",
+      "candidate": "/g22538014wej/11x22f/Search-R1/algorithm_a_runs/evidence_only_alpha01_seed42"
+    },
+    "trainer.experiment_name": {
+      "baseline": "hotpotqa-qwen25-3b-grpo-2gpu",
+      "candidate": "algorithm-a-evidence-only-alpha01-seed42"
+    },
+    "trainer.seed": {
+      "baseline": null,
+      "candidate": 42
+    }
+  }
+}

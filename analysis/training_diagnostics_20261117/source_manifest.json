@@ -1,0 +1,32 @@
+[
+  {
+    "run": "em",
+    "path": "hotpotqa-qwen25-3b-grpo-2gpu.log",
+    "bytes": 2156217,
+    "sha256": "7d11176affa0f6cc759212e7d135f4d65e3db3e0f174ca0615a9afa89909cbfb"
+  },
+  {
+    "run": "evidence",
+    "path": "algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/train.log",
+    "bytes": 2885518,
+    "sha256": "8800ab074a1b0001de5fd305feba177bc35f16af68dd734a5446dedf56f54d7b"
+  },
+  {
+    "run": "evidence",
+    "path": "algorithm_a_runs/evidence_2gpu_a0.1_s42_20261112_174015/traces/train.jsonl",
+    "bytes": 212024729,
+    "sha256": "f42fa696dc5a46e50a6f3a88a0f7530ea783677b0363ef9465c0d188b40872b9"
+  },
+  {
+    "run": "cost",
+    "path": "algorithm_a_runs/cost_state_2gpu_a0.1_b0.005_l0.01_s42_20261113_095134/train.log",
+    "bytes": 2428634,
+    "sha256": "71bdadc12e9e27af9ca998b6e5fb987f39e87e2500a58c6efff93d341898dce5"
+  },
+  {
+    "run": "cost",
+    "path": "algorithm_a_runs/cost_state_2gpu_a0.1_b0.005_l0.01_s42_20261113_095134/traces/train.jsonl",
+    "bytes": 109606950,
+    "sha256": "19fb0526385a47e42353082284f0dbcb3e3dab1af3ee437804f76e482e93a5f5"
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "smoke_passed": true,
+  "training_steps": 2,
+  "training_trajectories": 32,
+  "validation_trajectories": 4,
+  "checkpoint": "/g22538014wej/cityins1122/cityins/algorithm_a_runs/evidence_dapo_token_2gpu_smoke_30538_20261120_100100/checkpoints/actor/global_step_2",
+  "checkpoint_tensor_count": 435,
+  "checkpoint_bytes": 13588463912,
+  "parameter_max_absolute_changes": {
+    "model.layers.0.self_attn.q_proj.weight": 4.008878022432327e-06,
+    "model.layers.0.input_layernorm.weight": 3.993511199951172e-06,
+    "model.norm.weight": 3.814697265625e-06
+  },
+  "metrics": [
+    {
+      "step": "1",
+      "algorithm_a/total_reward": "0.075",
+      "actor/token_mean_loss": "1.000",
+      "actor/grad_norm": "0.828",
+      "timing_s/step": "77.413"
+    },
+    {
+      "step": "2",
+      "algorithm_a/total_reward": "0.010",
+      "actor/token_mean_loss": "1.000",
+      "actor/grad_norm": "1.090",
+      "timing_s/step": "88.925"
+    }
+  ],
+  "formal_training_started": false,
+  "gpu_count": 2,
+  "fsdp_gradient_test": "passed",
+  "fsdp_max_parameter_error": 0.0,
+  "test_entry": "test_evidence_dapo_2gpu.sh",
+  "search_limit": 5,
+  "reward": "answer EM + 0.1 * Evidence",
+  "context_limit": 8192
+}

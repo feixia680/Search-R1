@@ -1,0 +1,8 @@
+{
+  "one_beats_two": 24,
+  "one_answer_correct": 16,
+  "two_answer_missing": 21,
+  "two_tries_third": 16,
+  "two_invalid_final": 5,
+  "two_both_final_wrong": 3
+}

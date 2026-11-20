@@ -10,6 +10,38 @@ def validate_config(config):
         group_size=int(config.actor_rollout_ref.rollout.n_agent),
         max_batches=int(config.dynamic_sampling.max_candidate_batches),
         epsilon=float(config.dynamic_sampling.reward_range_epsilon))
+    engineering = config.get('engineering', {})
+    if engineering.get('profile_only', False):
+        if float(config.actor_rollout_ref.actor.optim.lr) != 0:
+            raise ValueError('Engineering benchmark requires actor learning rate zero')
+        if int(engineering.get('profile_repeats', 3)) < 1:
+            raise ValueError('Engineering profile_repeats must be positive')
+    world = int(config.trainer.n_gpus_per_node)*int(config.trainer.nnodes)
+    mini = int(config.actor_rollout_ref.actor.ppo_mini_batch_size)
+    micro = int(config.actor_rollout_ref.actor.ppo_micro_batch_size)
+    group = int(config.actor_rollout_ref.actor.get('engineering_loss_group_size', 0))
+    if micro < world or micro % world or mini % micro:
+        raise ValueError('Fixed microbatch must divide world size and global minibatch')
+    if group < 0 or (group and (micro//world) % group):
+        raise ValueError('Legacy loss groups must divide each rank microbatch')
+    grid = list(engineering.get('profile_micro_batches', []))
+    if grid:
+        if not engineering.get('profile_only', False):
+            raise ValueError('Microbatch grid is only supported by the isolated benchmark')
+        if any(m < world or m % world or mini % m for m in grid):
+            raise ValueError('Profile microbatch must divide world size and global minibatch')
+        if max(grid) > min(grid) and group != min(grid)//world:
+            raise ValueError('Microbatch comparison must preserve the baseline loss groups')
+    behavior = config.get('behavior_sampling', {})
+    if behavior.get('enabled', False):
+        from search_r1.dynamic_sampling.stratified import StratifiedQuestionSampler
+        StratifiedQuestionSampler([], {}, int(config.data.train_batch_size),
+            uniform_fraction=float(behavior.get('uniform_fraction', .25)),
+            role_weights=dict(behavior.get('role_weights', {})))
+    monitor = config.get('behavior_monitor', {})
+    if monitor.get('enabled', False):
+        from search_r1.dynamic_sampling.behavior import validate_monitor_options
+        validate_monitor_options(**{key: value for key, value in monitor.items() if key != 'enabled'})
     if config.algorithm.adv_estimator != 'grpo' or not config.do_search:
         raise ValueError('This entrypoint supports multi-turn search GRPO only')
     arc = config.actor_rollout_ref

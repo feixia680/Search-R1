@@ -1,0 +1,17 @@
+{
+  "train_grpo_dynamic_sampling_2gpu.sh": "3654cc1f2ba243a5232e4f4aca0288f9caaa824965c62c15df926aa21651ce36",
+  "train_grpo_dynamic_sampling_1gpu.sh": "3e215af8ffa4683fb1750df761274226591d28ba5b113c9b51f95835577bd5ba",
+  "BEHAVIOR_SAMPLING_MONITORING.md": "a314872d51bab097e19b8b6a449f0c4e9ba3fbd9788ebfa13d1ae70ced46e660",
+  "scripts/search_environment.sh": "b330d82fd00827824c4ef8f35fe58d5a3c148308ba575fe97d83cbb84d51f07f",
+  "evaluation/manage_dynamic_sampling_launch.py": "e9c8b960f86fa0dff4ec4a604adf4668c8eded9b4fcca187e355dfd2a62b1385",
+  "evaluation/build_behavior_strata.py": "6ed846f5cd3ffc590d3f05916ca3464f31ff2690a3ed81d01b670404484e2200",
+  "evaluation/check_behavior_inputs.py": "703e72a3b8349a7f67078ee3dfb46172779e57e4f68b81c4ec851849d0ed42b3",
+  "verl/trainer/main_dynamic_sampling.py": "bc1a283c73925156de60826529e162c7a27d181451ff9aaaf1c26889371c1b8d",
+  "verl/trainer/main_ppo.py": "b4dafb409df92cca164d4b6716780ad0079deff040cd738bcb9dcac8643ce641",
+  "verl/trainer/config/dynamic_sampling.yaml": "a8d4d11d1ce77faac4aacf3668e4fd199ca67f67d4d1738f9c5e30e956a7bd73",
+  "verl/trainer/ppo/dynamic_sampling_trainer.py": "62b7c57f5db2739c5e0be69ce85b4b9b83e88cb35df9cccb0b4d2f3816b6d885",
+  "search_r1/dynamic_sampling/stratified.py": "9d63120f50d7909d673d964ade227345ee0281af455e5b37455c8bf4755d798a",
+  "search_r1/dynamic_sampling/behavior.py": "93157d74738997a22f99055a7cca97d948cfd41d2d0bd0a69f6c74b7bc9ba269",
+  "tests/launchers/test_dynamic_sampling_launch.py": "57ea3c9ae7cddf8e0f1601e9ee5a4f9288d8e34ffe41dda1e8823dddd3948be8",
+  "tests/dynamic_sampling/test_behavior.py": "7e1d0ccfd9ded922b616a1a079069a986eebe53f86101fb61ba4ae438f809864"
+}
